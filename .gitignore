@@ -1,0 +1,16 @@
+# 改善版
+ns-3.45/.waf3-*
+ns-3.45/build/bindings
+ns-3.45/build/c4che
+ns-3.45/build/lib
+ns-3.45/build/ns3/
+ns-3.45/build/src/
+ns-3.45/build/utils/
+ns-3.45/build/.*
+ns-3.45/build/scratch/
+ns-3.45/build/build-status.py
+ns-3.45/build/config.log
+ns-3.45/build/compile_commands.json
+ns-3.45/examples/
+ns-3.45/.lock-waf*
+netanim-3.108/
