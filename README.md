@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This is **_ns-3-allinone_**, a repository with some scripts that bundle
 ns-3's mainline source code with compatible
 [App Store modules](https://apps.nsnam.org).
@@ -108,3 +109,7 @@ on ns-3 and compatible contributed App Store modules.
 
 ns-3-allinone used to have a `build.py` script, but building is now
 only coordinated by the `ns3` script.
+=======
+# ns-allinone-3.45
+ns3の最新版を新規に作成．2025/11/16~使用
+>>>>>>> e1644b831fc452cffa9d620c7ea4e96272a6900e
