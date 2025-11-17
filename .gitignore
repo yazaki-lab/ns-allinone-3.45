@@ -14,3 +14,4 @@ ns-3.45/build/compile_commands.json
 ns-3.45/examples/
 ns-3.45/.lock-waf*
 netanim-3.108/
+ninja.log
