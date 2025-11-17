@@ -1,1 +1,0 @@
-#include "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/contrib/oran/model/oran-report-lte-ue-cell-info.h"

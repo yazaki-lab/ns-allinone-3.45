@@ -1,1 +1,0 @@
-#include "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/internet/helper/ipv6-static-routing-helper.h"
