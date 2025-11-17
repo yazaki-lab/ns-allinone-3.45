@@ -5,6 +5,7 @@
 file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/**")
 set(OLD_GLOB
   "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/CMakeLists.txt"
+  "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/myfirst.cc"
   "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/nested-subdir"
   "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/scratch-simulator.cc"
   "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/subdir"
@@ -17,6 +18,7 @@ endif()
 # single_source_file_scratches at scratch/CMakeLists.txt:77 (file)
 file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/[^.]*.cc")
 set(OLD_GLOB
+  "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/myfirst.cc"
   "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/scratch-simulator.cc"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
