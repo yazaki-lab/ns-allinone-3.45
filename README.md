@@ -1,212 +1,109 @@
-<<<<<<< HEAD
-This is **_ns-3-allinone_**, a repository with some scripts that bundle
-ns-3's mainline source code with compatible
-[App Store modules](https://apps.nsnam.org).
+# 既存のREADMEをバックアップ
+cp README.md README.md.backup
 
-The mainline ns-3 release or development tree (ns-3-dev) only contains
-the ns-3 project's maintained
-modules (libraries) as found in the `src/` directory.  The `contrib/`
-directory is empty in the project mainline, allowing users to later
-download or clone extension modules to it.
+# 新しいREADMEを作成
+cat > README.md << 'EOF'
+# ns-3.45 無線LANシミュレーション環境
 
-In contrast, the ns-3 source code in this release contains several
-additional contrib modules known to work with the release.  In
-all other respects, this release should be identical with the main
-tree release with the same number.
-
-## Usage
-
-If you have downloaded this as a source archive of a release, simply
-recurse into the ns-3 directory and configure and build ns-3 as usual.
-The build process will include all modules found in the contrib directory
-that are compatible with your system (as detected by the `ns3` build
-script).  If you are not interested in some of the contributed modules,
-and want to shorten the compilation time, feel free to delete any such
-subdirectories from your `contrib` directory.
- 
-If you have cloned ns-3-allinone.git, you can checkout the manifest
-that corresponds to a particular release by checking out a tagged
-branch such as follows.
-
-By default, the `download.py` script will clone and checkout the latest
-ns-3 release.
-
-```shell
-./download.py
-```
-After the above command succeeds, an `ns-3.45` directory will be
-present containing the latest release, and within that directory's
-contrib directory, several extension modules will be downloaded.
-`download.py` reports on the extra modules that have been downloaded.
-
-The script also can be used to download and check against ns-3-dev
-as follows:
-
-```shell
-./download.py ns-3-dev
-```
-
-Note that using download.py with ns-3-dev may lead to compilation errors
-if the contrib modules listed in `MANIFEST.md` have not been upgraded
-to ns-3-dev compatibility, but any such modules could either be fixed locally
-or else deleted if not of interest.  
-
-ns-3.45 is the earliest such release that is supported; see
-[History](#history) below for ns-3-allinone prior to ns-3.45.
-
-## Documentation
-
-The manifest of contributed modules can be found in [MANIFEST.md](MANIFEST.md).
-This release does not package documentation of the contributed modules; please
-visit the App Store page or the module's repository itself for such documentation.
- 
-## Scope and Limitations
-
-The ns-3 mainline undergoes thorough CI testing of the build on many
-systems and compiler versions, as well as documentation and code style
-checks.  Contributed modules are not subjected to the same level of testing
-or adherence to style or other conventions.  This distribution errs on the
-side of inclusion of many modules so that users may learn about them,
-with the downside that users may encounter compilation problems on some
-systems.  The easiest fix is to delete any contrib modules that are
-causing problems, unless of course you want to use those modules, in which
-case you will need to fix that code by hand.
-
-If users find a compatibility issue with a contributed module, please
-file an issue on the upstream module's issue tracker, not on ns-3-allinone.
-
-## Proposing New Modules
-
-To recommend a new module for future inclusion in ns-allinone, please post
-a pull request to https://gitlab.com/nsnam/ns-3-allinone repository to
-add it to the file `MANIFEST.md`.
-
-To test it for inclusion, you can follow these steps:
-
-1. Run the './download.py' script, which will check out ns-3-dev and all
-   modules listed in the MANIFEST.md
-
-2. cd into ns-3-dev, and checkout the version of ns-3 that is being prepared
-   for allinone release.  For instance, if ns-3.45 has been release and
-   ns-allinone-3.45 is being prepared to be published shortly afterwards,
-   checkout the ns-3.45 tag in ns-3-dev to test against.
-
-3. Configure ns-3 with examples and tests, and build and run test.py.
-
-If your module depends on additional third-party libraries (such as Boost),
-your module must still compile cleanly on a system that does not have these
-dependencies.  A good way to check this is to perform the above test on a
-Docker container that has the minimal ns-3 requirements (CMake, Python3 and
-a c++ compiler).
-
-## History
-
-Prior to the ns-3.45 release, ns-3-allinone was a bundle that included
-the [bake packaging tool](https://gitlab.com/nsnam/bake.git), the
-[NetAnim](https://gitlab.com/nsnam/netanim.git) network animator, and
-ns-3.  Starting with ns-3.45, ns-3-allinone was changed to focus instead
-on ns-3 and compatible contributed App Store modules.
-
-ns-3-allinone used to have a `build.py` script, but building is now
-only coordinated by the `ns3` script.
-=======
-# ns-allinone-3.45
-ns3の最新版を新規に作成．2025/11/16~使用
->>>>>>> e1644b831fc452cffa9d620c7ea4e96272a6900e
-↓使い方
-CMakeビルドシステムを使ってビルドを設定します。以下のコマンドは、CMakeのPythonラッパーである を利用しています。ns3これはコマンドライン構文を簡素化し、Waf構文に似ています。ビルドを制御するオプションはいくつかありますが、通常はまず、デフォルトのビルドプロファイル（アサートが有効で、ns-3ロギングをサポート）でサンプルプログラムとテストを有効にします。
-
-$ ./ns3 configure --enable-examples --enable-tests
-次に、ns-3ns3をビルドするために使用します。
-
-$ ./ns3 build
-完了したら、ユニット テストを実行してビルドを確認できます。
-
-$ ./test.py
-すべてのテストはPASSまたはSKIPのいずれかになるはずです。これで、ns-3シミュレータが動作するようになりました。ここからプログラムを実行できます（examplesディレクトリを参照）。最初のチュートリアルプログラム（ソースコードはexamples/tutorial/first.ccにあります）を実行するには、ns3を使用してください（これにより、ns-3共有ライブラリが自動的に検出されます）。
-
-$ ./ns3 run first
-使用可能なコマンドライン オプションを表示するには、–PrintHelp引数を指定します。
-
-$ ./ns3 run 'first --PrintHelp'
-
-
-# ns-3.45 シミュレーション環境セットアップガイド
-
-このガイドでは、ns-3.45を使用した無線LANチャネル使用率シミュレーションの環境構築から実行までを説明します。
-
-## 目次
-1. [前提条件](#前提条件)
-2. [環境構築](#環境構築)
-3. [ビルド](#ビルド)
-4. [実行方法](#実行方法)
-5. [設定ファイル](#設定ファイル)
-6. [トラブルシューティング](#トラブルシューティング)
+ns-3.45を使用した無線LANチャネル使用率シミュレーションの完全セットアップガイドです。
+初心者でも分かるように、インストールから実行まで丁寧に解説します。
 
 ---
 
-## 前提条件
+## 📋 目次
 
-- macOS（Apple Silicon または Intel）
-- Homebrew がインストール済み
-- Xcode Command Line Tools がインストール済み
+1. [このプロジェクトについて](#このプロジェクトについて)
+2. [準備するもの](#準備するもの)
+3. [セットアップ手順](#セットアップ手順)
+4. [シミュレーションの実行](#シミュレーションの実行)
+5. [便利なショートカット設定](#便利なショートカット設定)
+6. [設定ファイルの編集](#設定ファイルの編集)
+7. [結果の確認方法](#結果の確認方法)
+8. [よくあるエラーと解決方法](#よくあるエラーと解決方法)
 
-### 必要なソフトウェアのインストール
+---
+
+## 🎯 このプロジェクトについて
+
+このプロジェクトでは、ns-3.45シミュレータを使って以下のことができます：
+
+- **無線LANのチャネル使用率測定**: APと複数のクライアント端末の通信をシミュレート
+- **Heavy/Lightユーザの混在環境**: データ使用量の異なるユーザが混在する環境を再現
+- **パフォーマンス評価**: スループット、遅延、パケット損失率などを測定
+
+---
+
+## 💻 準備するもの
+
+### 必要な環境
+- **macOS**（Intel Mac または Apple Silicon Mac）
+- インターネット接続
+- 約2GBの空きディスク容量
+
+### インストールが必要なソフトウェア
+
+以下のコマンドを順番に実行してください：
 ```bash
-# Python 3.13をインストール（ns-3のビルドに必要）
+# 1. Homebrewがインストールされているか確認
+which brew
+
+# もしHomebrewがインストールされていなければ、以下を実行
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 2. 必要なツールをインストール
 brew install python@3.13
-
-# yaml-cppライブラリをインストール
 brew install yaml-cpp
-
-# CMakeがインストールされていない場合
 brew install cmake
 ```
 
+**重要**: Python 3.14は使用しないでください。Python 3.13を使用してください。
+
 ---
 
-## 環境構築
+## 🔧 セットアップ手順
 
-### 1. ディレクトリ構造
+### ステップ1: ディレクトリ構造を確認
 
-プロジェクトのディレクトリ構造は以下の通りです：
+プロジェクトは以下のような構造になっています：
 ```
 ns-allinone-3.45/
-└── ns-3.45/
-    ├── scratch/
-    │   ├── scratch-simulator.cc          # 基本的なシミュレータ
-    │   └── channelutilization/           # チャネル使用率シミュレーション
+└── ns-3.45/                          ← この中で作業します
+    ├── scratch/                      ← シミュレーションコードを置く場所
+    │   ├── scratch-simulator.cc      ← テスト用の簡単なシミュレータ
+    │   └── channelutilization/       ← チャネル使用率シミュレーション
     │       ├── channelutilization.cc
-    │       ├── config.yaml               # 設定ファイル
+    │       ├── config.yaml
     │       └── CMakeLists.txt
-    ├── config.yaml                        # ルートディレクトリの設定（オプション）
-    └── cmake-cache/                       # ビルド成果物
+    └── cmake-cache/                  ← ビルド後にここに実行ファイルが作られます
 ```
 
-### 2. channelutilizationディレクトリの作成
+### ステップ2: channelutilizationディレクトリを作成
+
+ターミナルを開いて、以下を実行してください：
 ```bash
-# ns-3.45ディレクトリに移動
-cd /path/to/ns-allinone-3.45/ns-3.45
+# ns-3.45ディレクトリに移動（パスは自分の環境に合わせて変更）
+cd /Users/あなたのユーザ名/Desktop/ns-allinone-3.45/ns-3.45
 
 # channelutilizationディレクトリを作成
 mkdir -p scratch/channelutilization
 
-# channelutilization.ccをディレクトリに移動（既にscratch/にある場合）
+# もしchannelutilization.ccがすでにscratch/にあれば移動
 # mv scratch/channelutilization.cc scratch/channelutilization/
 ```
 
-### 3. CMakeLists.txtの作成
+### ステップ3: CMakeLists.txtを作成
 
-`scratch/channelutilization/CMakeLists.txt` を作成：
-```cmake
-# yaml-cppのパスを明示的に指定
+`scratch/channelutilization/CMakeLists.txt` というファイルを作成します：
+```bash
+cat > scratch/channelutilization/CMakeLists.txt << 'CMAKEFILE'
+# yaml-cppライブラリの場所を指定
 set(YAML_CPP_INCLUDE_DIR "/opt/homebrew/Cellar/yaml-cpp/0.8.0/include")
 set(YAML_CPP_LIBRARY "/opt/homebrew/Cellar/yaml-cpp/0.8.0/lib/libyaml-cpp.0.8.0.dylib")
 
 # ソースファイルを取得
 file(GLOB scratch_sources CONFIGURE_DEPENDS *.cc)
 
-# 実行可能ファイルをビルド
+# 実行ファイルをビルド
 build_exec(
   EXECNAME channelutilization
   EXECNAME_PREFIX scratch_
@@ -217,84 +114,86 @@ build_exec(
 
 # インクルードディレクトリを追加
 target_include_directories(scratch_channelutilization PRIVATE ${YAML_CPP_INCLUDE_DIR})
+CMAKEFILE
 ```
 
-**注意**: yaml-cppのバージョンが異なる場合は、パスを確認して修正してください：
+**注意**: yaml-cppのバージョンが違う場合は、以下のコマンドで確認して、パスを修正してください：
 ```bash
-brew list yaml-cpp  # インストールパスを確認
+brew list yaml-cpp
 ```
 
-### 4. デフォルト設定ファイルの生成
+### ステップ4: プロジェクトをビルド
 ```bash
-# デフォルトのconfig.yamlを生成
-./cmake-cache/scratch/channelutilization/ns3.45-channelutilization-default --generate-config=true
+# ns-3.45ディレクトリにいることを確認
+pwd
+# 出力: /Users/あなたのユーザ名/Desktop/ns-allinone-3.45/ns-3.45
 
-# 生成されたconfig.yamlをscratch/channelutilizationに移動
-mv config.yaml scratch/channelutilization/
+# Python 3.13を使ってビルド設定
+python3.13 ./ns3 configure --enable-examples --enable-tests
+
+# ビルド実行（5-10分かかります）
+python3.13 ./ns3 build
+```
+
+ビルドが完了したら、以下のメッセージが表示されます：
+```
+Finished executing the following commands:
+...
 ```
 
 ---
 
-## ビルド
-
-### 初回ビルド
-```bash
-# ns-3.45ディレクトリに移動
-cd /path/to/ns-allinone-3.45/ns-3.45
-
-# Python 3.13を使用してビルド
-python3.13 ./ns3 configure --enable-examples --enable-tests
-python3.13 ./ns3 build
-```
-
-### クリーンビルド（問題が発生した場合）
-```bash
-# キャッシュを削除
-rm -rf cmake-cache
-
-# 再ビルド
-python3.13 ./ns3 configure --enable-examples --enable-tests
-python3.13 ./ns3 build
-```
-
----
-
-## 実行方法
+## 🚀 シミュレーションの実行
 
 ### 基本的な実行方法
 
-#### 1. scratch-simulatorの実行
+#### 1. テスト用シミュレータを実行（動作確認）
 ```bash
 ./cmake-cache/scratch/ns3.45-scratch-simulator-default
 ```
 
-期待される出力：
+**期待される出力**:
 ```
 Scratch Simulator
 ```
 
-#### 2. channelutilizationの実行
-```bash
-# デフォルト設定で実行
-./cmake-cache/scratch/channelutilization/ns3.45-channelutilization-default --config=scratch/channelutilization/config.yaml
+この出力が表示されればOKです！
 
-# または、ルートディレクトリのconfig.yamlを使用
-./cmake-cache/scratch/channelutilization/ns3.45-channelutilization-default --config=config.yaml
+#### 2. 設定ファイルを生成
+```bash
+./cmake-cache/scratch/channelutilization/ns3.45-channelutilization-default --generate-config=true
+
+# 生成されたconfig.yamlを移動
+mv config.yaml scratch/channelutilization/
 ```
 
-### 便利なエイリアスの設定（推奨）
-
-`.zshrc`（または`.bashrc`）に以下を追加すると、どこからでも簡単に実行できます：
+#### 3. チャネル使用率シミュレーションを実行
 ```bash
-# .zshrcに追加
+./cmake-cache/scratch/channelutilization/ns3.45-channelutilization-default --config=scratch/channelutilization/config.yaml
+```
+
+---
+
+## ⚡ 便利なショートカット設定
+
+毎回長いコマンドを入力するのは大変なので、ショートカットを設定しましょう。
+
+### ショートカットの登録
+
+ターミナルで以下を実行してください：
+```bash
 cat >> ~/.zshrc << 'EOF'
 
-# ns-3実行用のエイリアスと関数
-alias ns3-cd='cd /path/to/ns-allinone-3.45/ns-3.45'
+# ========================================
+# ns-3 便利コマンド
+# ========================================
 
-# channelutilizationを実行する関数
+# ns-3ディレクトリに素早く移動
+alias ns3-cd='cd /Users/あなたのユーザ名/Desktop/ns-allinone-3.45/ns-3.45'
+
+# チャネル使用率シミュレーションを実行
 run-channel() {
-    cd /path/to/ns-allinone-3.45/ns-3.45
+    cd /Users/あなたのユーザ名/Desktop/ns-allinone-3.45/ns-3.45
     if [ $# -eq 0 ]; then
         ./cmake-cache/scratch/channelutilization/ns3.45-channelutilization-default --config=scratch/channelutilization/config.yaml
     else
@@ -303,274 +202,421 @@ run-channel() {
     cd - > /dev/null
 }
 
-# scratch-simulatorを実行する関数
+# テストシミュレータを実行
 run-simulator() {
-    cd /path/to/ns-allinone-3.45/ns-3.45
+    cd /Users/あなたのユーザ名/Desktop/ns-allinone-3.45/ns-3.45
     ./cmake-cache/scratch/ns3.45-scratch-simulator-default "$@"
     cd - > /dev/null
 }
 
-# ビルドコマンドの簡略化
+# プロジェクトを再ビルド
 ns3-build() {
-    cd /path/to/ns-allinone-3.45/ns-3.45
+    cd /Users/あなたのユーザ名/Desktop/ns-allinone-3.45/ns-3.45
     python3.13 ./ns3 build
     cd - > /dev/null
 }
 EOF
 
-# 設定を反映
+# 設定を読み込み
 source ~/.zshrc
 ```
 
-**注意**: `/path/to/ns-allinone-3.45/ns-3.45` を実際のパスに置き換えてください。
+**重要**: `/Users/あなたのユーザ名/Desktop/ns-allinone-3.45/ns-3.45` の部分を、
+自分のns-3.45があるパスに置き換えてください。
 
-### エイリアス設定後の実行方法
+### ショートカットの使い方
+
+設定後は、どのディレクトリからでも以下のコマンドが使えます：
 ```bash
-# どこからでも実行可能！
-run-channel                              # デフォルト設定で実行
-run-channel --config=custom.yaml         # カスタム設定で実行
-run-simulator                            # scratch-simulatorを実行
-ns3-build                                # ビルド
-ns3-cd                                   # ns-3.45ディレクトリに移動
+# シミュレーションを実行
+run-channel
+
+# 別の設定ファイルで実行
+run-channel --config=別の設定.yaml
+
+# テストシミュレータを実行
+run-simulator
+
+# プロジェクトをビルド
+ns3-build
+
+# ns-3ディレクトリに移動
+ns3-cd
 ```
 
 ---
 
-## 設定ファイル
+## ⚙️ 設定ファイルの編集
 
-### config.yamlの編集
+### 設定ファイルを開く
 ```bash
-# エディタで編集
+# nanoエディタで開く（初心者向け）
 nano scratch/channelutilization/config.yaml
 
-# または
+# または、VS Codeで開く
 code scratch/channelutilization/config.yaml
 ```
 
-### 設定例
+**nanoエディタの使い方**:
+- 編集する: 矢印キーでカーソルを移動して編集
+- 保存する: `Ctrl + X` → `Y` → `Enter`
+
+### 設定項目の説明
 ```yaml
-# 総ユーザ数
+# 総ユーザ数（APに接続する端末の数）
 nStations: 10
 
-# 重ユーザ数
+# 重ユーザ数（データをたくさん使うユーザ）
 nHeavyUsers: 7
 
-# 軽ユーザ数
+# 軽ユーザ数（データをあまり使わないユーザ）
 nLightUsers: 3
 
-# 重ユーザ割合(%) 
+# 重ユーザの割合（%）
+# 計算式: (nHeavyUsers / nStations) × 100
 heavyUserPercentage: 70
 
-# 実行環境の配置半径(m)
+# APからの距離（メートル）
 radius: 7.5
 
-# 出力CSVファイル名
+# 結果を保存するCSVファイル名
 outputFile: "channel_utilization_results.csv"
 
-# 重ユーザのデータレート(Mbps)
+# 重ユーザのデータ速度（Mbps）
 heavyUserRate: 50
 
-# 軽ユーザのデータレート(Mbps)
+# 軽ユーザのデータ速度（Mbps）
 lightUserRate: 20
 
-# パケットサイズ(バイト)
+# パケットサイズ（バイト）
 packetSize: 1500
 
-# シミュレーション時間(秒)
+# シミュレーション時間（秒）
 simulationTime: 10.0
 
-# TXT形式の詳細結果出力を有効化
+# 詳細な結果をテキストファイルに保存するか
 enableTxtOutput: true
 
-# NetAnimトレース生成を無効化（パケット上限エラーを回避）
+# NetAnimアニメーションを生成するか（falseを推奨）
 enableNetAnim: false
 
-# 詳細ログ出力
+# 詳細なログを表示するか
 verbose: false
 ```
 
-### パラメータの説明
+### 設定のコツ
 
-| パラメータ | 説明 | 推奨値 |
-|-----------|------|--------|
-| `nStations` | 総端末数 | 1-100 |
-| `nHeavyUsers` | 重ユーザ数 | nStations以下 |
-| `nLightUsers` | 軽ユーザ数 | nStations以下 |
-| `heavyUserPercentage` | 重ユーザ割合(%) | (nHeavyUsers/nStations)*100 |
-| `radius` | AP周りの配置半径(m) | 5.0-15.0 |
-| `heavyUserRate` | 重ユーザのデータレート(Mbps) | 20-100 |
-| `lightUserRate` | 軽ユーザのデータレート(Mbps) | 5-50 |
-| `packetSize` | パケットサイズ(バイト) | 1024-1500 |
-| `simulationTime` | シミュレーション時間(秒) | 5.0-60.0 |
-| `enableNetAnim` | NetAnimトレース生成 | false推奨 |
+✅ **必ず守ること**:
+- `nStations = nHeavyUsers + nLightUsers` にする
+- 例: `nStations: 10`, `nHeavyUsers: 7`, `nLightUsers: 3`
 
-**注意**: 
-- `nStations = nHeavyUsers + nLightUsers` になるように設定してください
-- `enableNetAnim: true` にすると、多数のパケットで "Max Packets per trace file exceeded" エラーが出ることがあります
+⚠️ **注意点**:
+- `enableNetAnim: true` にすると、パケット数が多い時にエラーが出ることがあります
+- 初めての場合は `enableNetAnim: false` のままにしてください
+
+### 設定例：10ユーザ、Heavy 70%
+```yaml
+nStations: 10
+nHeavyUsers: 7
+nLightUsers: 3
+heavyUserPercentage: 70
+radius: 7.5
+outputFile: "test_10users_70heavy.csv"
+heavyUserRate: 50
+lightUserRate: 20
+packetSize: 1500
+simulationTime: 10.0
+enableTxtOutput: true
+enableNetAnim: false
+verbose: false
+```
 
 ---
 
-## 結果の確認
+## 📊 結果の確認方法
 
-### 出力ファイル
+### 生成されるファイル
 
-シミュレーション実行後、以下のファイルが生成されます：
+シミュレーション実行後、以下のファイルが作成されます：
 ```
 ns-3.45/
-├── results/
-│   └── channelutilization_YYYYMMDD_HHMMSS/
-│       ├── results_nXX_hYY.txt         # 詳細な統計情報
-│       └── animation_nXX_hYY.xml       # NetAnimトレースファイル（enableNetAnim: trueの場合）
-└── result_csv/
-    └── channel_utilization_*.csv       # CSV形式の結果（累積）
+├── results/                          ← 詳細な結果
+│   └── channelutilization_20251118_143025/
+│       └── results_n10_h70.txt       ← テキスト形式の詳細結果
+└── result_csv/                       ← CSV形式の結果
+    └── channel_utilization_results.csv
 ```
 
-### CSVファイルの確認
+### CSV結果を見る
 ```bash
-# CSV結果を表示
+# CSVファイルの内容を表示
 cat result_csv/channel_utilization_results.csv
 
-# 最新の結果を表示
+# 最新の結果だけ表示
 tail -1 result_csv/channel_utilization_results.csv
 ```
 
-### TXT結果の確認
+**CSV形式の例**:
+```
+クライアント数,重ユーザ数,軽ユーザ数,重ユーザ割合,配置半径,シミュレーション時間,チャネル使用率,平均スループット,平均遅延,パケット損失率,タイムスタンプ
+10,7,3,70,7.5,10.0,45.2,38.5,12.3,0.5,20251118_143025_t10.0s
+```
+
+### テキスト結果を見る
 ```bash
-# 最新の結果ディレクトリを表示
-ls -lt results/ | head -2
+# 最新の結果ディレクトリを確認
+ls -lt results/ | head -5
 
 # 結果ファイルを表示
 cat results/channelutilization_*/results_*.txt
 ```
 
+**テキスト結果の例**:
+```
+========================================
+ns-3 無線LANチャネル使用率シミュレーション結果
+========================================
+
+[シミュレーションパラメータ]
+総端末数: 10
+Heavyユーザ数: 7 (70%)
+Lightユーザ数: 3 (30%)
+...
+
+[チャネル使用率]
+チャネル使用率: 45.2 %
+...
+
+[性能指標]
+平均スループット: 38.5 Mbps
+平均遅延: 12.3 ms
+パケット損失率: 0.5 %
+...
+```
+
 ---
 
-## トラブルシューティング
+## 🔧 よくあるエラーと解決方法
 
-### 1. `./ns3` スクリプトが動作しない
+### エラー1: `./ns3` が動かない
 
-**エラー**: `ValueError: action 'store_true' is not valid for positional arguments`
+**エラーメッセージ**:
+```
+ValueError: action 'store_true' is not valid for positional arguments
+```
 
-**原因**: Python 3.14との互換性問題
+**原因**: Python 3.14を使っている
 
-**解決策**: Python 3.13を使用
+**解決方法**:
 ```bash
+# Python 3.13をインストール
 brew install python@3.13
+
+# Python 3.13を使ってビルド
 python3.13 ./ns3 build
 ```
 
-### 2. yaml-cppライブラリが見つからない
+---
 
-**エラー**: `ld: library 'yaml-cpp' not found`
+### エラー2: yaml-cppが見つからない
 
-**解決策**:
+**エラーメッセージ**:
+```
+ld: library 'yaml-cpp' not found
+```
+
+**解決方法**:
 ```bash
 # yaml-cppをインストール
 brew install yaml-cpp
 
-# パスを確認
+# インストール場所を確認
 brew list yaml-cpp
 
-# CMakeLists.txtのパスを更新
+# CMakeLists.txtのパスを確認・修正
 nano scratch/channelutilization/CMakeLists.txt
 ```
 
-### 3. YAMLファイルが見つからない
+---
 
-**エラー**: `YAML読み込みエラー: bad file: config.yaml`
+### エラー3: config.yamlが見つからない
 
-**解決策**:
+**エラーメッセージ**:
+```
+YAML読み込みエラー: bad file: config.yaml
+```
+
+**解決方法**:
 ```bash
 # 設定ファイルを生成
 ./cmake-cache/scratch/channelutilization/ns3.45-channelutilization-default --generate-config=true
 
-# 正しいパスを指定
-./cmake-cache/scratch/channelutilization/ns3.45-channelutilization-default --config=scratch/channelutilization/config.yaml
+# 正しい場所に移動
+mv config.yaml scratch/channelutilization/
+
+# 正しいパスを指定して実行
+run-channel
 ```
 
-### 4. NetAnimのパケット上限エラー
+---
 
-**エラー**: `Max Packets per trace file exceeded`
+### エラー4: パケット数が多すぎる
 
-**解決策**: `config.yaml` で NetAnim を無効化
-```yaml
+**エラーメッセージ**:
+```
+Max Packets per trace file exceeded
+```
+
+**原因**: NetAnimが有効になっている
+
+**解決方法**:
+```bash
+# config.yamlを編集
+nano scratch/channelutilization/config.yaml
+
+# 以下の行を変更
 enableNetAnim: false
 ```
 
-### 5. uart-net-deviceのビルドエラー
+---
 
-**エラー**: `Undefined symbols for architecture arm64`
+### エラー5: ビルドが失敗する（uart-net-device）
 
-**解決策**: 
+**エラーメッセージ**:
+```
+Undefined symbols for architecture arm64
+...uart-net-device...
+```
+
+**解決方法**:
 ```bash
 # contrib/uart-net-deviceを無効化
 cd contrib
 mv uart-net-device uart-net-device.disabled
 
-# 再ビルド
+# 元のディレクトリに戻る
 cd ..
+
+# 再ビルド
 python3.13 ./ns3 clean
 python3.13 ./ns3 build
 ```
 
-### 6. コンパイル警告
+---
 
-**警告**: `unused variable 't'`
+### 警告: unused variable
 
-**解決策**: これは警告であり、実行には影響しません。無視しても問題ありません。
+**警告メッセージ**:
+```
+warning: unused variable 't'
+```
+
+**これは何？**: これは単なる警告で、エラーではありません。
+
+**対処**: 無視しても大丈夫です。シミュレーションは正常に動作します。
 
 ---
 
-## よくある質問
+## ❓ よくある質問
 
-### Q1: どのPythonバージョンを使うべきですか？
+### Q1: どのPythonバージョンを使えばいいですか？
 
-A: Python 3.13を推奨します。Python 3.14では`./ns3`スクリプトに互換性問題があります。
-
-### Q2: シミュレーション結果はどこに保存されますか？
-
-A: 
-- 詳細結果: `results/channelutilization_YYYYMMDD_HHMMSS/`
-- CSV結果: `result_csv/`
-
-### Q3: 複数の設定でシミュレーションを実行したい
-
-A: 異なる名前のYAMLファイルを作成し、`--config`オプションで指定してください：
+**A**: Python 3.13を使ってください。Python 3.14は使わないでください。
 ```bash
+# 今使っているPythonのバージョンを確認
+python3 --version
+python3.13 --version
+python3.14 --version
+
+# Python 3.13をインストール
+brew install python@3.13
+```
+
+---
+
+### Q2: 結果はどこに保存されますか？
+
+**A**: 2つの場所に保存されます：
+
+1. **詳細な結果**: `results/channelutilization_日付_時刻/`
+2. **CSV結果**: `result_csv/`
+
+---
+
+### Q3: 異なる条件で複数回シミュレーションしたい
+
+**A**: 設定ファイルを複数作成して、それぞれ実行してください：
+```bash
+# 設定ファイル1を作成
+cp scratch/channelutilization/config.yaml scratch/channelutilization/config_scenario1.yaml
+
+# 設定ファイル2を作成
+cp scratch/channelutilization/config.yaml scratch/channelutilization/config_scenario2.yaml
+
+# それぞれ編集してから実行
 run-channel --config=scratch/channelutilization/config_scenario1.yaml
 run-channel --config=scratch/channelutilization/config_scenario2.yaml
 ```
 
-### Q4: NetAnimで結果を可視化したい
+---
 
-A: 
-1. `config.yaml`で`enableNetAnim: true`に設定
-2. シミュレーション実行後、生成されたXMLファイルをNetAnimで開く
-3. 注意: 大量のパケットでエラーが出る場合は、`simulationTime`を短くするか、`nStations`を減らしてください
+### Q4: シミュレーション結果をExcelで見たい
+
+**A**: CSV結果ファイルをExcelで開けます：
+
+1. Finderで `result_csv` フォルダを開く
+2. `channel_utilization_*.csv` をダブルクリック
+3. Excelまたはスプレッドシートで開く
 
 ---
 
-## 参考リンク
+### Q5: ビルドに時間がかかりすぎる
 
-- [ns-3公式ドキュメント](https://www.nsnam.org/documentation/)
+**A**: 初回ビルドは5-15分かかることがあります。コーヒーを飲んで待ちましょう☕
+
+2回目以降は変更した部分だけビルドされるので、もっと速くなります。
+
+---
+
+## 📚 参考リンク
+
+- [ns-3公式サイト](https://www.nsnam.org/)
 - [ns-3チュートリアル](https://www.nsnam.org/docs/tutorial/html/)
-- [yaml-cpp GitHub](https://github.com/jbeder/yaml-cpp)
+- [ns-3ドキュメント](https://www.nsnam.org/documentation/)
 
 ---
 
-## ライセンス
+## 📝 更新履歴
 
-このプロジェクトはGPL-2.0ライセンスの下で配布されています。
-
----
-
-## 更新履歴
-
-- 2025-11-18: 初版作成
-  - ns-3.45環境構築手順
-  - channelutilizationシミュレーション実行方法
+- **2025-11-18**: 初版作成
+  - 環境構築からシミュレーション実行まで
   - トラブルシューティング追加
+  - 初心者向けに詳しく解説
+
+---
+
+## 📄 ライセンス
+
+このプロジェクトはGPL-2.0ライセンスで配布されています。
+
+---
+
+## 🤝 サポート
+
+質問や問題がある場合は、以下を確認してください：
+
+1. この README の「よくあるエラーと解決方法」セクション
+2. 「よくある質問」セクション
+3. ns-3公式ドキュメント
+
+それでも解決しない場合は、エラーメッセージの全文を保存して、
+指導教員やクラスメートに相談してください。
+
+---
+
+**Happy Simulating! 🎉**
 
 EOF
 
-echo "README.mdを作成しました！"
+echo "✅ 新しいREADME.mdを作成しました！"
+echo "📖 README.mdを確認してください"
