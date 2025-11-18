@@ -130,8 +130,7 @@ $ ./ns3 run first
 
 $ ./ns3 run 'first --PrintHelp'
 
-# READMEファイルを作成
-cat > README.md << 'EOF'
+
 # ns-3.45 シミュレーション環境セットアップガイド
 
 このガイドでは、ns-3.45を使用した無線LANチャネル使用率シミュレーションの環境構築から実行までを説明します。
