@@ -1,8 +1,3 @@
-# 既存のREADMEをバックアップ
-cp README.md README.md.backup
-
-# 新しいREADMEを作成
-cat > README.md << 'EOF'
 # ns-3.45 無線LANシミュレーション環境
 
 ns-3.45を使用した無線LANチャネル使用率シミュレーションの完全セットアップガイドです。
