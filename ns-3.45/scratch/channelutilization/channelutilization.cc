@@ -194,7 +194,7 @@ int main(int argc, char *argv[]) {
     RngSeedManager::SetRun(1);
 
     // デフォルト設定
-    std::string configFile = "scratch/channelutilization/config.yaml";
+    std::string configFile = "config.yaml";
     bool generateConfig = false;
 
     // コマンドライン引数の処理

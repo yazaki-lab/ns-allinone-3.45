@@ -34,7 +34,7 @@ simulationTime: 10.0
 enableTxtOutput: true
 
 # NetAnimトレース生成を有効化
-enableNetAnim: true
+enableNetAnim: false
 
 # 詳細ログ出力
 verbose: false
