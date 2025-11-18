@@ -1,10 +1,10 @@
 # ns-3 無線LANチャネル使用率シミュレーション 設定ファイル
 
 # 総ユーザ数
-nStations: 1
+nStations: 10
 
 # 重ユーザ数
-nHeavyUsers: 1
+nHeavyUsers: 10
 
 # 軽ユーザ数
 nLightUsers: 0
