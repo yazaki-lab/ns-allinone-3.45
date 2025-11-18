@@ -1162,6 +1162,13 @@
 /Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/CMakeFiles/install.dir
 /Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/CMakeFiles/install/local.dir
 /Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/CMakeFiles/install/strip.dir
+/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/channelutilization/CMakeFiles/scratch_channelutilization.dir
+/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/channelutilization/CMakeFiles/edit_cache.dir
+/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/channelutilization/CMakeFiles/rebuild_cache.dir
+/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/channelutilization/CMakeFiles/list_install_components.dir
+/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/channelutilization/CMakeFiles/install.dir
+/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/channelutilization/CMakeFiles/install/local.dir
+/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/channelutilization/CMakeFiles/install/strip.dir
 /Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/nested-subdir/CMakeFiles/scratch-nested-subdir-lib.dir
 /Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/nested-subdir/CMakeFiles/scratch_nested-subdir_scratch-nested-subdir-executable.dir
 /Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/nested-subdir/CMakeFiles/edit_cache.dir
