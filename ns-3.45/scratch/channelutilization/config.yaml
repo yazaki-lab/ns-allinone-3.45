@@ -1,34 +1,34 @@
-# ns-3 無線LANチャネル使用率シミュレーション 設定ファイル
+# ns-3 実験用設定ファイル (改良版)
 
-# 総ユーザ数
-nStations: 1
-
-# 重ユーザ割合(%) ※nHeavyUsers/nStations * 100 と一致させる
+# --- 基本設定 ---
+nStations: 10
 heavyUserPercentage: 100
+radius: 5.0  # 大きくする(隠れ端末)
 
-# 実行環境の配置半径(m)
-radius: 5.0
+# --- トラフィック負荷 ---
+heavyUserRate: 5  # Mbps
+lightUserRate: 0
+packetSize: 1500  # Phase 1, 3で可変 (100 vs 1500)
 
-# 出力CSVファイル名
-outputFile: "cu_RvsU_1clients.csv"
+# --- 重要: 実験制御スイッチ ---
+# プロトコル (TCP or UDP)
+useTcp: false 
 
-# 重ユーザのデータレート(Mbps)
-heavyUserRate: 5
+# レート制御 (true=Minstrel/自動, false=Fixed/固定)
+useMinstrel: false
 
-# 軽ユーザのデータレート(Mbps)
-lightUserRate: 2
+# フレーム集約 (A-MPDU) 最大サイズ (Byte)
+# ここを 0, 8000, 65535 と変化させる
+maxAmpduSize: 65535 
 
-# パケットサイズ(バイト)
-packetSize: 1500
+# RTS/CTS 閾値 (Byte)
+# 65535=無効, 0=常時有効
+# Phase 2で 0 と 65535 を比較
+rtsCtsThreshold: 65535
 
-# シミュレーション時間(秒)
+# --- 出力設定 ---
+outputFile: "experiment_phase1.csv"
 simulationTime: 10.0
-
-# TXT形式の詳細結果出力を有効化
 enableTxtOutput: true
-
-# NetAnimトレース生成を有効化
 enableNetAnim: false
-
-# 詳細ログ出力
 verbose: false
