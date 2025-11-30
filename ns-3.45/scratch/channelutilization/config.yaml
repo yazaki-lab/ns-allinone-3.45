@@ -1,7 +1,7 @@
 # ns-3 実験用設定ファイル (改良版)
 
 # --- 基本設定 ---
-nStations: 10
+nStations: 1
 heavyUserPercentage: 100
 radius: 5.0  # 大きくする(隠れ端末)
 
@@ -23,11 +23,11 @@ maxAmpduSize: 65535
 
 # RTS/CTS 閾値 (Byte)
 # 65535=無効, 0=常時有効
-# Phase 2で 0 と 65535 を比較
+#  0 と 65535 を比較
 rtsCtsThreshold: 65535
 
 # --- 出力設定 ---
-outputFile: "experiment_phase1.csv"
+outputFile: "cu_RvsU_1clients.csv"
 simulationTime: 10.0
 enableTxtOutput: true
 enableNetAnim: false

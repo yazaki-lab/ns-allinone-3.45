@@ -1,6 +1,7 @@
 /*
- * ns-3 無線LAN チャネル使用率シミュレーション (改良版)
+ * ns-3 無線LAN チャネル使用率シミュレーション (修正版v3)
  * 対応: IEEE 802.11ac, A-MPDU制御, レート制御切替, TCP/UDP, 衝突率測定
+ * 追加: パケットロス率, 平均遅延, 配置半径の出力
  */
 
 #include "ns3/core-module.h"
@@ -36,7 +37,7 @@ struct SimulationConfig {
     uint32_t nHeavyUsers;
     uint32_t nLightUsers;
 
-    double radius;
+    double radius;          // 配置半径 (m) [YAML設定可能]
     std::string outputFile;
     uint32_t heavyUserRate; // Mbps
     uint32_t lightUserRate; // Mbps
@@ -108,7 +109,7 @@ SimulationConfig LoadConfigFromYAML(const std::string& configFile) {
         config.nHeavyUsers = (config.nStations * config.heavyUserPercentage) / 100;
         config.nLightUsers = config.nStations - config.nHeavyUsers;
 
-        config.radius = yamlConfig["radius"].as<double>();
+        config.radius = yamlConfig["radius"].as<double>(); // ここで半径を読み込み
         config.outputFile = yamlConfig["outputFile"].as<std::string>();
         config.heavyUserRate = yamlConfig["heavyUserRate"].as<uint32_t>();
         config.lightUserRate = yamlConfig["lightUserRate"].as<uint32_t>();
@@ -117,8 +118,8 @@ SimulationConfig LoadConfigFromYAML(const std::string& configFile) {
         // 追加パラメータ (デフォルト値付き)
         config.useTcp = yamlConfig["useTcp"].as<bool>(false);
         config.useMinstrel = yamlConfig["useMinstrel"].as<bool>(false);
-        config.maxAmpduSize = yamlConfig["maxAmpduSize"].as<uint32_t>(65535); // デフォルト64KB
-        config.rtsCtsThreshold = yamlConfig["rtsCtsThreshold"].as<uint32_t>(2347); // デフォルト無効(閾値大)
+        config.maxAmpduSize = yamlConfig["maxAmpduSize"].as<uint32_t>(65535); 
+        config.rtsCtsThreshold = yamlConfig["rtsCtsThreshold"].as<uint32_t>(2347); 
 
         config.simulationTime = yamlConfig["simulationTime"].as<double>(10.0);
         config.enableTxtOutput = yamlConfig["enableTxtOutput"].as<bool>(true);
@@ -138,7 +139,7 @@ void GenerateDefaultConfig(const std::string& filename) {
     out << "# 実験計画対応版 設定ファイル" << std::endl;
     out << "nStations: 10" << std::endl;
     out << "heavyUserPercentage: 100" << std::endl;
-    out << "radius: 10.0" << std::endl;
+    out << "radius: 10.0             # 配置半径(m)" << std::endl;
     out << "outputFile: \"experiment_result.csv\"" << std::endl;
     out << "heavyUserRate: 10" << std::endl;
     out << "lightUserRate: 2" << std::endl;
@@ -159,7 +160,6 @@ void GenerateDefaultConfig(const std::string& filename) {
 }
 
 int main(int argc, char *argv[]) {
-    // 再現性のためシード固定
     RngSeedManager::SetSeed(1);
     RngSeedManager::SetRun(1);
 
@@ -190,7 +190,7 @@ int main(int argc, char *argv[]) {
 
     // Wi-Fi設定 (11ac VHT)
     WifiHelper wifi;
-    wifi.SetStandard(WIFI_STANDARD_80211ac); // 修正: 11ax -> 11ac
+    wifi.SetStandard(WIFI_STANDARD_80211ac);
 
     // レート制御の設定
     if (config.useMinstrel) {
@@ -211,17 +211,17 @@ int main(int argc, char *argv[]) {
     // APの設定
     mac.SetType("ns3::ApWifiMac", 
                 "Ssid", SsidValue(ssid),
-                "BE_MaxAmpduSize", UintegerValue(config.maxAmpduSize)); // A-MPDU設定
+                "BE_MaxAmpduSize", UintegerValue(config.maxAmpduSize)); 
     NetDeviceContainer apDevice = wifi.Install(phy, mac, wifiApNode);
 
     // STAの設定
     mac.SetType("ns3::StaWifiMac", 
                 "Ssid", SsidValue(ssid), 
                 "ActiveProbing", BooleanValue(false),
-                "BE_MaxAmpduSize", UintegerValue(config.maxAmpduSize)); // A-MPDU設定
+                "BE_MaxAmpduSize", UintegerValue(config.maxAmpduSize)); 
     NetDeviceContainer staDevices = wifi.Install(phy, mac, wifiStaNodes);
 
-    // RTS/CTS閾値の設定 (Attributeで一括設定が難しいため各NetDeviceに設定)
+    // RTS/CTS閾値の設定
     for (uint32_t i = 0; i < apDevice.GetN(); ++i) {
         Ptr<WifiNetDevice> dev = DynamicCast<WifiNetDevice>(apDevice.Get(i));
         dev->GetRemoteStationManager()->SetAttribute("RtsCtsThreshold", UintegerValue(config.rtsCtsThreshold));
@@ -231,7 +231,7 @@ int main(int argc, char *argv[]) {
         dev->GetRemoteStationManager()->SetAttribute("RtsCtsThreshold", UintegerValue(config.rtsCtsThreshold));
     }
 
-    // 移動モデル (円形配置)
+    // 移動モデル (円形配置: 半径 radius を使用)
     MobilityHelper mobility;
     Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator>();
     positionAlloc->Add(Vector(0.0, 0.0, 0.0)); // AP
@@ -262,18 +262,13 @@ int main(int argc, char *argv[]) {
         Address serverAddress(InetSocketAddress(apInterface.GetAddress(0), port + i));
 
         if (config.useTcp) {
-            // TCPの場合
             PacketSinkHelper packetSinkHelper("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), port + i));
             serverApps.Add(packetSinkHelper.Install(wifiApNode.Get(0)));
 
             BulkSendHelper source("ns3::TcpSocketFactory", serverAddress);
-            source.SetAttribute("MaxBytes", UintegerValue(0)); // 無限
-            // BulkSendはレート制御が難しいが、SendWindow等で間接的に制御される。
-            // ここでは簡易的に「全力送信」になるため、オファードロード制御はUDPで行うのが一般的。
-            // ※厳密なレート制御TCPが必要なら OnOffApplication + TCP を使う
+            source.SetAttribute("MaxBytes", UintegerValue(0)); 
             clientApps.Add(source.Install(wifiStaNodes.Get(i)));
         } else {
-            // UDPの場合
             UdpServerHelper server(port + i);
             serverApps.Add(server.Install(wifiApNode.Get(0)));
 
@@ -289,23 +284,18 @@ int main(int argc, char *argv[]) {
     serverApps.Start(Seconds(0.0));
     clientApps.Start(Seconds(1.0));
 
-    // --- トレース設定 ---
-    // 1. APのPHY状態 (Channel Utilization用)
+    // トレース設定
     Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/State/State",
                     MakeCallback(&PhyStateChangeCallback));
-
-    // 2. APのPHY送信開始 (集約効率計算用)
     Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/PhyTxBegin",
                     MakeCallback(&PhyTxBeginCallback));
-
-    // 3. STAのMAC送信失敗 (衝突率計算用) - 全STAに設定
     for(uint32_t i=0; i<config.nStations; i++){
         std::stringstream path;
         path << "/NodeList/" << (i+1) << "/DeviceList/*/$ns3::WifiNetDevice/RemoteStationManager/MacTxDataFailed";
         Config::Connect(path.str(), MakeCallback(&MacTxDataFailedCallback));
         
         std::stringstream path2;
-        path2 << "/NodeList/" << (i+1) << "/DeviceList/*/$ns3::WifiNetDevice/Mac/MacTx"; // 送信試行
+        path2 << "/NodeList/" << (i+1) << "/DeviceList/*/$ns3::WifiNetDevice/Mac/MacTx";
         Config::Connect(path2.str(), MakeCallback(&MacTxDataCallback));
     }
 
@@ -313,12 +303,11 @@ int main(int argc, char *argv[]) {
     FlowMonitorHelper flowmon;
     Ptr<FlowMonitor> monitor = flowmon.InstallAll();
 
-    // アニメーション
+    // アニメーション (エラー修正済み)
     AnimationInterface *anim = nullptr;
     if (config.enableNetAnim) {
         std::string animFile = "results/" + GenerateTimestamp() + "_anim.xml";
         anim = new AnimationInterface(animFile);
-        anim->SetMaxEnergy(0); // バッテリー表示OFF
     }
 
     NS_LOG_INFO("Simulating...");
@@ -329,40 +318,51 @@ int main(int argc, char *argv[]) {
     double channelUtil = CalculateChannelUtilization(config.simulationTime);
     double collisionRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / g_macTxAttempts * 100.0 : 0.0;
     
-    // スループット等
+    // スループット, 遅延, ロス率
     monitor->CheckForLostPackets();
     std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats();
     double totalThroughput = 0.0;
     long totalRxPackets = 0;
+    long totalTxPackets = 0;
+    double totalDelaySec = 0.0;
 
     for (auto const &flow : stats) {
         totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / config.simulationTime;
         totalRxPackets += flow.second.rxPackets;
+        totalTxPackets += flow.second.txPackets;
+        totalDelaySec += flow.second.delaySum.GetSeconds();
     }
 
-    // 集約効率 (受信パケット総数 / 物理フレーム送信回数)
-    // ※ 簡易的な指標です。より厳密にはSender側で集計する必要がありますが、傾向は掴めます。
+    // 平均計算
+    double avgDelayMs = (totalRxPackets > 0) ? (totalDelaySec / totalRxPackets) * 1000.0 : 0.0;
+    double packetLossRate = (totalTxPackets > 0) ? (1.0 - (double)totalRxPackets / totalTxPackets) * 100.0 : 0.0;
+    
+    // 集約効率
     double aggregationRatio = (g_phyTxFrames > 0) ? (double)totalRxPackets / g_phyTxFrames : 0.0;
 
     // コンソール出力
     std::cout << "=== Result ===" << std::endl;
+    std::cout << "Stations:            " << config.nStations << std::endl;
+    std::cout << "Radius:              " << config.radius << " m" << std::endl;
     std::cout << "Channel Utilization: " << channelUtil << " %" << std::endl;
     std::cout << "Total Throughput:    " << totalThroughput << " Mbps" << std::endl;
+    std::cout << "Packet Loss Rate:    " << packetLossRate << " %" << std::endl;
+    std::cout << "Avg Delay:           " << avgDelayMs << " ms" << std::endl;
     std::cout << "Collision Rate:      " << collisionRate << " %" << std::endl;
-    std::cout << "Aggregation Ratio:   " << aggregationRatio << " MPDUs/PPDU (approx)" << std::endl;
 
     // CSV出力
     std::string csvPath = "result_csv/" + config.outputFile;
     std::ofstream csv(csvPath, std::ios::app);
     
-    // ヘッダ (ファイルが空の場合のみ)
+    // ヘッダ (Loss, Delay, Radiusを追加)
     if (csv.tellp() == 0) {
-        csv << "Stations,Load(Mbps),PktSize,UseTCP,RateCtrl,MaxAmpdu,RtsCtsTh,"
-            << "Utilization(%),Throughput(Mbps),CollisionRate(%),AggRatio" << std::endl;
+        csv << "Stations,Radius(m),Load(Mbps),PktSize,UseTCP,RateCtrl,MaxAmpdu,RtsCtsTh,"
+            << "Utilization(%),Throughput(Mbps),LossRate(%),AvgDelay(ms),CollisionRate(%),AggRatio" << std::endl;
     }
     
     csv << config.nStations << "," 
-        << (config.nHeavyUsers * config.heavyUserRate) << "," // Total Load (簡易)
+        << config.radius << "," // 配置半径を追加
+        << (config.nHeavyUsers * config.heavyUserRate) << "," 
         << config.packetSize << ","
         << (config.useTcp ? "TCP" : "UDP") << ","
         << (config.useMinstrel ? "Auto" : "Fixed") << ","
@@ -370,6 +370,8 @@ int main(int argc, char *argv[]) {
         << config.rtsCtsThreshold << ","
         << channelUtil << ","
         << totalThroughput << ","
+        << packetLossRate << "," // パケットロス率
+        << avgDelayMs << ","     // 平均遅延
         << collisionRate << ","
         << aggregationRatio << std::endl;
 
