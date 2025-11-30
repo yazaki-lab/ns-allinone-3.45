@@ -3,12 +3,6 @@
 # 総ユーザ数
 nStations: 10
 
-# 重ユーザ数
-nHeavyUsers: 10
-
-# 軽ユーザ数
-nLightUsers: 0
-
 # 重ユーザ割合(%) ※nHeavyUsers/nStations * 100 と一致させる
 heavyUserPercentage: 100
 
@@ -16,13 +10,13 @@ heavyUserPercentage: 100
 radius: 5.0
 
 # 出力CSVファイル名
-outputFile: "channel_utilization_baseline.csv"
+outputFile: "channel_utilization_firsttime.csv"
 
 # 重ユーザのデータレート(Mbps)
-heavyUserRate: 50
+heavyUserRate: 5
 
 # 軽ユーザのデータレート(Mbps)
-lightUserRate: 20
+lightUserRate: 2
 
 # パケットサイズ(バイト)
 packetSize: 1500
