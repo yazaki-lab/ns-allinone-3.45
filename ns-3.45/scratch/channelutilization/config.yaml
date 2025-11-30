@@ -1,7 +1,7 @@
 # ns-3 無線LANチャネル使用率シミュレーション 設定ファイル
 
 # 総ユーザ数
-nStations: 10
+nStations: 1
 
 # 重ユーザ割合(%) ※nHeavyUsers/nStations * 100 と一致させる
 heavyUserPercentage: 100
@@ -10,7 +10,7 @@ heavyUserPercentage: 100
 radius: 5.0
 
 # 出力CSVファイル名
-outputFile: "channel_utilization_firsttime.csv"
+outputFile: "cu_RvsU_1clients.csv"
 
 # 重ユーザのデータレート(Mbps)
 heavyUserRate: 5
