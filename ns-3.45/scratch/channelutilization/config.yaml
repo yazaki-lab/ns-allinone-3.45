@@ -27,7 +27,7 @@ maxAmpduSize: 65535
 rtsCtsThreshold: 65535
 
 # --- 出力設定 ---
-outputFile: "cu_NvsU_2nd.csv"
+outputFile: "cu_NvsU_3rd.csv"
 simulationTime: 30.0
 enableTxtOutput: true
 enableNetAnim: false

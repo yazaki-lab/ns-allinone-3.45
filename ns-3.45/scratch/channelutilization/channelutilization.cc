@@ -334,7 +334,7 @@ int main(int argc, char *argv[]) {
     
     // 衝突率の計算 (Collision Rate)
     // 定義: 干渉・SINRによる全ドロップ数 / 全物理送信回数
-    double collisionRate = (g_phyTxTotal > 0) ? (double)g_phyRxDropCollision / (g_phyTxTotal+(double)g_phyRxDropCollision) * 100.0 : 0.0;
+    double collisionRate = (g_phyTxTotal > 0) ? (double)g_phyRxDropCollision / g_phyTxTotal * 100.0 : 0.0;
     
     // スループット, 遅延, ロス率
     monitor->CheckForLostPackets();
