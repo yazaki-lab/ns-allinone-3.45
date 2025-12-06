@@ -3,12 +3,12 @@
 # --- 基本設定 ---
 nStations: 10
 heavyUserPercentage: 100
-radius: 10.0  # 大きくする(隠れ端末)
+radius: 5.0  # 大きくする(隠れ端末)
 
 # --- トラフィック負荷 ---
 heavyUserRate: 5  # Mbps
 lightUserRate: 0
-packetSize: 100  # (100 vs 1500)
+packetSize: 1500  # (100 vs 1500)
 
 # --- 実験制御スイッチ ---
 # プロトコル (TCP or UDP)
@@ -24,10 +24,10 @@ maxAmpduSize: 65535
 # RTS/CTS 閾値 (Byte)
 # 65535=無効, 0=常時有効
 #  0 と 65535 を比較
-rtsCtsThreshold: 0
+rtsCtsThreshold: 65535
 
 # --- 出力設定 ---
-outputFile: "cu_RvsU.csv"
+outputFile: "cu_NvsU_2nd.csv"
 simulationTime: 30.0
 enableTxtOutput: true
 enableNetAnim: false
