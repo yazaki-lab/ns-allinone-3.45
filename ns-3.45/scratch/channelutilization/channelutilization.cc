@@ -1,8 +1,14 @@
 /*
- * ns-3 無線LAN チャネル使用率シミュレーション (修正版v4)
- * 修正点:
- * 1. CollisionRateの計算を「PHY層受信エラー率」に変更 (100%超えを防止)
- * 2. デフォルト設定を「自動レート制御(Minstrel)」「A-MPDU有効」に変更 (使用率向上)
+ * ns-3 無線LAN チャネル使用率シミュレーション (修正版v5)
+ * 
+ * 変更点:
+ * 1. 衝突率(Collision Rate)の定義変更:
+ *    計算式 = (全ノードの干渉・SINRによるドロップ回数) / (全ノードの物理層送信回数)
+ *    ※ APと全端末(STA)の合計値で算出します。
+ * 
+ * 2. デフォルト設定の最適化:
+ *    - RateControl: Minstrel (自動)
+ *    - A-MPDU: 65535 (有効)
  */
 
 #include "ns3/core-module.h"
@@ -26,12 +32,14 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE("WifiChannelUtilizationSim");
 
 // --- グローバル集計用変数 ---
-uint64_t g_totalBusyTime = 0;       // チャネルBusy時間 (ns)
-uint64_t g_phyTxFrames = 0;         // 物理層で送信されたフレーム数 (集約後)
+uint64_t g_totalBusyTime = 0;        // チャネルBusy時間 (ns)
 
-// 衝突率(エラー率)計算用
-uint64_t g_phyRxOk = 0;             // PHY層での正常受信回数
-uint64_t g_phyRxError = 0;          // PHY層での受信エラー回数(衝突含む)
+// 衝突率計算用
+uint64_t g_phyTxTotal = 0;           // 分母: 物理層での総送信回数 (全ノード)
+uint64_t g_phyRxDropCollision = 0;   // 分子: 干渉(Interference)やSINR不足によるドロップ数 (全ノード)
+
+// 集約効率計算用 (送信フレーム数)
+uint64_t g_phyTxFrames = 0;          
 
 // --- シミュレーション設定構造体 ---
 struct SimulationConfig {
@@ -59,27 +67,30 @@ struct SimulationConfig {
 
 // --- コールバック関数群 ---
 
-// PHY状態変化 (Busy時間計測)
+// 1. チャネル使用率計測 (APのPHY状態監視)
 void PhyStateChangeCallback(std::string context, Time start, Time duration, WifiPhyState state) {
+    // TX(送信中), RX(受信中), CCA_BUSY(他干渉検知中) の時間を加算
     if (state == WifiPhyState::TX || state == WifiPhyState::RX || state == WifiPhyState::CCA_BUSY) {
         g_totalBusyTime += duration.GetNanoSeconds();
     }
 }
 
-// PHY送信開始 (集約効率計算用)
+// 2. 総送信回数カウント (衝突率の分母)
+// 全ノード(AP+STA)が物理層で送信を開始した回数
 void PhyTxBeginCallback(std::string context, Ptr<const Packet> p, double txPowerW) {
-    g_phyTxFrames++;
+    g_phyTxTotal++;
+    g_phyTxFrames++; // 集約効率計算用にも使用
 }
 
-// PHY受信成功 (衝突率計算用: 分母)
-void PhyRxEndCallback(std::string context, Ptr<const Packet> p, double snr, WifiTxVector txVector, std::vector<bool> status) {
-    g_phyRxOk++;
-}
-
-// PHY受信失敗/ドロップ (衝突率計算用: 分子)
-// ノイズや干渉(衝突)でパケットが復号できなかった場合に呼ばれる
+// 3. 衝突回数カウント (衝突率の分子)
+// 全ノード(AP+STA)でパケットドロップが発生した際、その理由が「衝突」関連か判定
 void PhyRxDropCallback(std::string context, Ptr<const Packet> p, WifiPhyRxfailureReason reason) {
-    g_phyRxError++;
+    // DROP_INTERFERENCE: 他の信号と重なってプリアンブル検知後に失敗
+    // DROP_SINR: 信号対雑音干渉比が悪くて失敗 (主に衝突が原因)
+    if (reason == WifiPhyRxfailureReason::DROP_INTERFERENCE || 
+        reason == WifiPhyRxfailureReason::DROP_SINR) {
+        g_phyRxDropCollision++;
+    }
 }
 
 // チャネル使用率計算
@@ -137,7 +148,7 @@ SimulationConfig LoadConfigFromYAML(const std::string& configFile) {
 // デフォルト設定ファイル生成
 void GenerateDefaultConfig(const std::string& filename) {
     std::ofstream out(filename);
-    out << "# 実験計画対応版 設定ファイル (Updated)" << std::endl;
+    out << "# 実験計画対応版 設定ファイル (Collision Fix)" << std::endl;
     out << "nStations: 10" << std::endl;
     out << "heavyUserPercentage: 100" << std::endl;
     out << "radius: 10.0             # 配置半径(m)" << std::endl;
@@ -149,8 +160,8 @@ void GenerateDefaultConfig(const std::string& filename) {
     out << std::endl;
     out << "# --- 実験条件スイッチ ---" << std::endl;
     out << "useTcp: false              # trueならTCP, falseならUDP" << std::endl;
-    out << "useMinstrel: true          # true:Minstrl(Auto/推奨), false:Constant(Fixed/非効率)" << std::endl;
-    out << "maxAmpduSize: 65535        # A-MPDU最大サイズ(Byte). 0で無効化, 65535で有効化(推奨)" << std::endl;
+    out << "useMinstrel: true          # true:Minstrl(Auto/推奨), false:Constant(Fixed)" << std::endl;
+    out << "maxAmpduSize: 65535        # A-MPDU最大サイズ(Byte). 0で無効化, 65535で有効化" << std::endl;
     out << "rtsCtsThreshold: 65535     # RTS/CTS閾値. 65535で無効化" << std::endl;
     out << std::endl;
     out << "enableTxtOutput: true" << std::endl;
@@ -285,21 +296,21 @@ int main(int argc, char *argv[]) {
     serverApps.Start(Seconds(0.0));
     clientApps.Start(Seconds(1.0));
 
-    // トレース設定
-    // 1. Busy時間
+    // --- トレース設定 (修正箇所) ---
+
+    // 1. チャネル使用率 (APの状態のみを監視)
+    //    APのコンテキストでChannelがBusyなら、そのセルのChannelはBusyとみなす
     Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/State/State",
                     MakeCallback(&PhyStateChangeCallback));
     
-    // 2. 送信フレーム数 (集約効率用)
-    Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/PhyTxBegin",
+    // 2. 総送信回数 (全ノードを対象: wildcardを使用)
+    //    "/NodeList/*" でAPもSTAもすべて含む
+    Config::Connect("/NodeList/*/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/PhyTxBegin",
                     MakeCallback(&PhyTxBeginCallback));
 
-    // 3. 衝突/エラー判定用 (APでの受信状況を監視)
-    // 受信成功 (MonitorSnifferRxだとプロミスキャスなので、PhyRxEndを使う)
-    Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/PhyRxEnd",
-                    MakeCallback(&PhyRxEndCallback));
-    // 受信失敗 (衝突やノイズ)
-    Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/PhyRxDrop",
+    // 3. 衝突(ドロップ)回数 (全ノードを対象)
+    //    誰かが受信に失敗(干渉)したらカウント
+    Config::Connect("/NodeList/*/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/PhyRxDrop",
                     MakeCallback(&PhyRxDropCallback));
 
 
@@ -321,9 +332,9 @@ int main(int argc, char *argv[]) {
     // --- 結果集計 ---
     double channelUtil = CalculateChannelUtilization(config.simulationTime);
     
-    // 新しい衝突率(PHYエラー率)の計算: Error / (Success + Error)
-    uint64_t totalPhyRxAttempts = g_phyRxOk + g_phyRxError;
-    double phyErrorRate = (totalPhyRxAttempts > 0) ? (double)g_phyRxError / totalPhyRxAttempts * 100.0 : 0.0;
+    // 衝突率の計算 (Collision Rate)
+    // 定義: 干渉・SINRによる全ドロップ数 / 全物理送信回数
+    double collisionRate = (g_phyTxTotal > 0) ? (double)g_phyRxDropCollision / g_phyTxTotal * 100.0 : 0.0;
     
     // スループット, 遅延, ロス率
     monitor->CheckForLostPackets();
@@ -350,7 +361,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Channel Utilization: " << channelUtil << " %" << std::endl;
     std::cout << "Total Throughput:    " << totalThroughput << " Mbps" << std::endl;
     std::cout << "Packet Loss Rate:    " << packetLossRate << " %" << std::endl;
-    std::cout << "Phy Rx Error Rate:   " << phyErrorRate << " % (Use as Collision Rate)" << std::endl;
+    std::cout << "Collision Rate:      " << collisionRate << " % (Physical Interference)" << std::endl;
 
     // CSV出力
     std::string csvPath = "result_csv/" + config.outputFile;
@@ -358,7 +369,7 @@ int main(int argc, char *argv[]) {
     
     if (csv.tellp() == 0) {
         csv << "Stations,Radius(m),Load(Mbps),PktSize,UseTCP,RateCtrl,MaxAmpdu,RtsCtsTh,"
-            << "Utilization(%),Throughput(Mbps),LossRate(%),AvgDelay(ms),PhyErrorRate(%),AggRatio" << std::endl;
+            << "Utilization(%),Throughput(Mbps),LossRate(%),AvgDelay(ms),CollisionRate(%),AggRatio" << std::endl;
     }
     
     csv << config.nStations << "," 
@@ -373,7 +384,7 @@ int main(int argc, char *argv[]) {
         << totalThroughput << ","
         << packetLossRate << "," 
         << avgDelayMs << ","    
-        << phyErrorRate << "," // CollisionRateの代わりにPHYエラー率を出力
+        << collisionRate << "," // 物理層での衝突率
         << aggregationRatio << std::endl;
 
     if (anim) delete anim;
