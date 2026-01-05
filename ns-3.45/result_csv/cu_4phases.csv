@@ -1,0 +1,2 @@
+Stations,Radius(m),Load(Mbps),PktSize,UseTCP,RateCtrl,MaxAmpdu,RtsCtsTh,Utilization(%),Throughput(Mbps),LossRate(%),AvgDelay(ms),CollisionRate(%),AggRatio
+1,5,500,1500,UDP,Auto,65535,65535,88.9794,306.724,37.9168,398.624,0,40.3041

@@ -1,33 +1,33 @@
 # ns-3 実験用設定ファイル (改良版)
 
 # --- 基本設定 ---
-nStations: 10
+nStations: 1
 heavyUserPercentage: 100
 radius: 5.0  # 大きくする(隠れ端末)
 
 # --- トラフィック負荷 ---
-heavyUserRate: 5  # Mbps
+heavyUserRate: 500  # Mbps
 lightUserRate: 0
-packetSize: 1500  # (100 vs 1500)
+packetSize: 1500  
 
 # --- 実験制御スイッチ ---
 # プロトコル (TCP or UDP)
-useTcp: false 
+useTcp: false
 
-# レート制御 (true=Minstrel/自動, false=Fixed/固定)
+# レート制御 (true=Minstrel/自動, false=Fixed/固定)固定レート (VhtMcs8) で衝突の影響のみを抽出
 useMinstrel: true
 
 # フレーム集約 (A-MPDU) 最大サイズ (Byte)
-# ここを 0, 8000, 65535 と変化させる
-maxAmpduSize: 65535 
+# ここを 0, 8192,16384,32768,65535 と変化させる
+maxAmpduSize: 65535
 
-# RTS/CTS 閾値 (Byte)
+# RTS/CTS 閾値 (Byte)(要はフロー制御)
 # 65535=無効, 0=常時有効
 #  0 と 65535 を比較
 rtsCtsThreshold: 65535
 
 # --- 出力設定 ---
-outputFile: "cu_NvsU_3rd.csv"
+outputFile: "cu_4phases.csv"
 simulationTime: 30.0
 enableTxtOutput: true
 enableNetAnim: false
