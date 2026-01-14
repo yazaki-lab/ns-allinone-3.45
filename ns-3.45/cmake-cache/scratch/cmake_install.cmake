@@ -1,4 +1,4 @@
-# Install script for directory: /Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch
+# Install script for directory: /Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/scratch
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,14 +39,14 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/channelutilization/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/nested-subdir/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/channelutilization/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/nested-subdir/cmake_install.cmake")
 
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/install_local_manifest.txt"
+  file(WRITE "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/scratch/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

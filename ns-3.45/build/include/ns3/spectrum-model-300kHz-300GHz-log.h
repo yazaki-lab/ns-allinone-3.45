@@ -1,1 +1,1 @@
-#include "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/spectrum/model/spectrum-model-300kHz-300GHz-log.h"
+#include "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/spectrum/model/spectrum-model-300kHz-300GHz-log.h"

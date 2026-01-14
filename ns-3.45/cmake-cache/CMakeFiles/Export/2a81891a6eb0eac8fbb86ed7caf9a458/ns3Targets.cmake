@@ -19,7 +19,7 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
 set(_cmake_targets_defined "")
 set(_cmake_targets_not_defined "")
 set(_cmake_expected_targets "")
-foreach(_cmake_expected_target IN ITEMS ns3::aqm-eval-suite ns3::lorawan ns3::netsimulyzer ns3::nr ns3::oran ns3::sip ns3::uart-net-device ns3::wban ns3::antenna ns3::aodv ns3::applications ns3::bridge ns3::buildings ns3::config-store ns3::core ns3::csma ns3::csma-layout ns3::dsdv ns3::dsr ns3::energy ns3::flow-monitor ns3::internet ns3::internet-apps ns3::lr-wpan ns3::lte ns3::mesh ns3::mobility ns3::netanim ns3::network ns3::nix-vector-routing ns3::olsr ns3::point-to-point ns3::point-to-point-layout ns3::propagation ns3::sixlowpan ns3::spectrum ns3::stats ns3::topology-read ns3::traffic-control ns3::uan ns3::virtual-net-device ns3::wifi ns3::wimax ns3::zigbee)
+foreach(_cmake_expected_target IN ITEMS ns3::antenna ns3::aodv ns3::applications ns3::bridge ns3::buildings ns3::config-store ns3::core ns3::csma ns3::csma-layout ns3::dsdv ns3::dsr ns3::energy ns3::flow-monitor ns3::internet ns3::internet-apps ns3::lr-wpan ns3::lte ns3::mesh ns3::mobility ns3::netanim ns3::network ns3::nix-vector-routing ns3::olsr ns3::point-to-point ns3::point-to-point-layout ns3::propagation ns3::sixlowpan ns3::spectrum ns3::stats ns3::topology-read ns3::traffic-control ns3::uan ns3::virtual-net-device ns3::wifi ns3::wimax ns3::zigbee)
   list(APPEND _cmake_expected_targets "${_cmake_expected_target}")
   if(TARGET "${_cmake_expected_target}")
     list(APPEND _cmake_targets_defined "${_cmake_expected_target}")
@@ -55,84 +55,12 @@ if(_IMPORT_PREFIX STREQUAL "/")
   set(_IMPORT_PREFIX "")
 endif()
 
-# Create imported target ns3::aqm-eval-suite
-add_library(ns3::aqm-eval-suite SHARED IMPORTED)
-
-set_target_properties(ns3::aqm-eval-suite PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
-  INTERFACE_LINK_LIBRARIES "ns3::core;ns3::network;ns3::internet;ns3::applications;ns3::point-to-point;ns3::point-to-point-layout"
-)
-
-# Create imported target ns3::lorawan
-add_library(ns3::lorawan SHARED IMPORTED)
-
-set_target_properties(ns3::lorawan PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
-  INTERFACE_LINK_LIBRARIES "ns3::energy;ns3::point-to-point;ns3::buildings"
-)
-
-# Create imported target ns3::netsimulyzer
-add_library(ns3::netsimulyzer SHARED IMPORTED)
-
-set_target_properties(ns3::netsimulyzer PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE;NETSIMULYZER_NS3_VERSION=45;HAS_NETSIMULYZER"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
-  INTERFACE_LINK_LIBRARIES "ns3::buildings;ns3::core;ns3::network;ns3::mobility;ns3::point-to-point;ns3::applications"
-)
-
-# Create imported target ns3::nr
-add_library(ns3::nr SHARED IMPORTED)
-
-set_target_properties(ns3::nr PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
-  INTERFACE_LINK_LIBRARIES "ns3::internet-apps;ns3::flow-monitor;ns3::spectrum;ns3::buildings;ns3::virtual-net-device;ns3::point-to-point;ns3::applications;ns3::csma;ns3::config-store"
-)
-
-# Create imported target ns3::oran
-add_library(ns3::oran SHARED IMPORTED)
-
-set_target_properties(ns3::oran PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE;ENABLE_ORAN"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
-  INTERFACE_LINK_LIBRARIES "ns3::core;ns3::network;ns3::lte;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libsqlite3.tbd"
-)
-
-# Create imported target ns3::sip
-add_library(ns3::sip SHARED IMPORTED)
-
-set_target_properties(ns3::sip PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
-  INTERFACE_LINK_LIBRARIES "ns3::core;ns3::network;ns3::internet"
-)
-
-# Create imported target ns3::uart-net-device
-add_library(ns3::uart-net-device SHARED IMPORTED)
-
-set_target_properties(ns3::uart-net-device PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE;HAVE_BOOST_ASIO"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
-  INTERFACE_LINK_LIBRARIES "ns3::core;ns3::network;ns3::lr-wpan;ns3::internet"
-)
-
-# Create imported target ns3::wban
-add_library(ns3::wban SHARED IMPORTED)
-
-set_target_properties(ns3::wban PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE;HAVE_STDINT_H"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
-  INTERFACE_LINK_LIBRARIES "ns3::network;ns3::core;ns3::mobility;ns3::spectrum;ns3::propagation"
-)
-
 # Create imported target ns3::antenna
 add_library(ns3::antenna SHARED IMPORTED)
 
 set_target_properties(ns3::antenna PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE;NEED_AND_HAVE_BOOST_BESSEL_FUNC"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::core"
 )
 
@@ -140,8 +68,8 @@ set_target_properties(ns3::antenna PROPERTIES
 add_library(ns3::aodv SHARED IMPORTED)
 
 set_target_properties(ns3::aodv PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::applications;ns3::internet-apps;ns3::wifi"
 )
 
@@ -149,8 +77,8 @@ set_target_properties(ns3::aodv PROPERTIES
 add_library(ns3::applications SHARED IMPORTED)
 
 set_target_properties(ns3::applications PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::internet"
 )
 
@@ -158,8 +86,8 @@ set_target_properties(ns3::applications PROPERTIES
 add_library(ns3::bridge SHARED IMPORTED)
 
 set_target_properties(ns3::bridge PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::network"
 )
 
@@ -167,8 +95,8 @@ set_target_properties(ns3::bridge PROPERTIES
 add_library(ns3::buildings SHARED IMPORTED)
 
 set_target_properties(ns3::buildings PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::propagation"
 )
 
@@ -176,8 +104,8 @@ set_target_properties(ns3::buildings PROPERTIES
 add_library(ns3::config-store SHARED IMPORTED)
 
 set_target_properties(ns3::config-store PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::core;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libxml2.tbd"
 )
 
@@ -185,17 +113,16 @@ set_target_properties(ns3::config-store PROPERTIES
 add_library(ns3::core SHARED IMPORTED)
 
 set_target_properties(ns3::core PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE;HAVE_BOOST;HAVE_BOOST_UNITS"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
-  INTERFACE_LINK_LIBRARIES "/opt/homebrew/Cellar/gsl/2.8/lib/libgsl.dylib;/opt/homebrew/Cellar/gsl/2.8/lib/libgslcblas.dylib"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
 )
 
 # Create imported target ns3::csma
 add_library(ns3::csma SHARED IMPORTED)
 
 set_target_properties(ns3::csma PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::network"
 )
 
@@ -203,8 +130,8 @@ set_target_properties(ns3::csma PROPERTIES
 add_library(ns3::csma-layout SHARED IMPORTED)
 
 set_target_properties(ns3::csma-layout PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::internet;ns3::csma;ns3::point-to-point"
 )
 
@@ -212,8 +139,8 @@ set_target_properties(ns3::csma-layout PROPERTIES
 add_library(ns3::dsdv SHARED IMPORTED)
 
 set_target_properties(ns3::dsdv PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::mesh;ns3::internet-apps"
 )
 
@@ -221,8 +148,8 @@ set_target_properties(ns3::dsdv PROPERTIES
 add_library(ns3::dsr SHARED IMPORTED)
 
 set_target_properties(ns3::dsr PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::mesh"
 )
 
@@ -230,8 +157,8 @@ set_target_properties(ns3::dsr PROPERTIES
 add_library(ns3::energy SHARED IMPORTED)
 
 set_target_properties(ns3::energy PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::network"
 )
 
@@ -239,8 +166,8 @@ set_target_properties(ns3::energy PROPERTIES
 add_library(ns3::flow-monitor SHARED IMPORTED)
 
 set_target_properties(ns3::flow-monitor PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::internet"
 )
 
@@ -248,8 +175,8 @@ set_target_properties(ns3::flow-monitor PROPERTIES
 add_library(ns3::internet SHARED IMPORTED)
 
 set_target_properties(ns3::internet PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::bridge;ns3::traffic-control"
 )
 
@@ -257,8 +184,8 @@ set_target_properties(ns3::internet PROPERTIES
 add_library(ns3::internet-apps SHARED IMPORTED)
 
 set_target_properties(ns3::internet-apps PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::internet"
 )
 
@@ -266,8 +193,8 @@ set_target_properties(ns3::internet-apps PROPERTIES
 add_library(ns3::lr-wpan SHARED IMPORTED)
 
 set_target_properties(ns3::lr-wpan PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::spectrum"
 )
 
@@ -275,8 +202,8 @@ set_target_properties(ns3::lr-wpan PROPERTIES
 add_library(ns3::lte SHARED IMPORTED)
 
 set_target_properties(ns3::lte PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::spectrum;ns3::buildings;ns3::virtual-net-device;ns3::point-to-point;ns3::applications;ns3::csma;ns3::config-store"
 )
 
@@ -284,8 +211,8 @@ set_target_properties(ns3::lte PROPERTIES
 add_library(ns3::mesh SHARED IMPORTED)
 
 set_target_properties(ns3::mesh PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::wifi;ns3::applications"
 )
 
@@ -293,8 +220,8 @@ set_target_properties(ns3::mesh PROPERTIES
 add_library(ns3::mobility SHARED IMPORTED)
 
 set_target_properties(ns3::mobility PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::antenna;ns3::network"
 )
 
@@ -302,8 +229,8 @@ set_target_properties(ns3::mobility PROPERTIES
 add_library(ns3::netanim SHARED IMPORTED)
 
 set_target_properties(ns3::netanim PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::wimax;ns3::wifi;ns3::lte;ns3::uan;ns3::lr-wpan"
 )
 
@@ -311,8 +238,8 @@ set_target_properties(ns3::netanim PROPERTIES
 add_library(ns3::network SHARED IMPORTED)
 
 set_target_properties(ns3::network PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::stats"
 )
 
@@ -320,8 +247,8 @@ set_target_properties(ns3::network PROPERTIES
 add_library(ns3::nix-vector-routing SHARED IMPORTED)
 
 set_target_properties(ns3::nix-vector-routing PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::internet"
 )
 
@@ -329,8 +256,8 @@ set_target_properties(ns3::nix-vector-routing PROPERTIES
 add_library(ns3::olsr SHARED IMPORTED)
 
 set_target_properties(ns3::olsr PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::internet"
 )
 
@@ -338,8 +265,8 @@ set_target_properties(ns3::olsr PROPERTIES
 add_library(ns3::point-to-point SHARED IMPORTED)
 
 set_target_properties(ns3::point-to-point PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::network"
 )
 
@@ -347,8 +274,8 @@ set_target_properties(ns3::point-to-point PROPERTIES
 add_library(ns3::point-to-point-layout SHARED IMPORTED)
 
 set_target_properties(ns3::point-to-point-layout PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::internet;ns3::point-to-point;ns3::mobility"
 )
 
@@ -356,8 +283,8 @@ set_target_properties(ns3::point-to-point-layout PROPERTIES
 add_library(ns3::propagation SHARED IMPORTED)
 
 set_target_properties(ns3::propagation PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::mobility"
 )
 
@@ -365,8 +292,8 @@ set_target_properties(ns3::propagation PROPERTIES
 add_library(ns3::sixlowpan SHARED IMPORTED)
 
 set_target_properties(ns3::sixlowpan PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::internet"
 )
 
@@ -374,8 +301,8 @@ set_target_properties(ns3::sixlowpan PROPERTIES
 add_library(ns3::spectrum SHARED IMPORTED)
 
 set_target_properties(ns3::spectrum PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::propagation;ns3::antenna"
 )
 
@@ -383,8 +310,8 @@ set_target_properties(ns3::spectrum PROPERTIES
 add_library(ns3::stats SHARED IMPORTED)
 
 set_target_properties(ns3::stats PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::core;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libsqlite3.tbd"
 )
 
@@ -392,8 +319,8 @@ set_target_properties(ns3::stats PROPERTIES
 add_library(ns3::topology-read SHARED IMPORTED)
 
 set_target_properties(ns3::topology-read PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::network"
 )
 
@@ -401,8 +328,8 @@ set_target_properties(ns3::topology-read PROPERTIES
 add_library(ns3::traffic-control SHARED IMPORTED)
 
 set_target_properties(ns3::traffic-control PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::network"
 )
 
@@ -410,8 +337,8 @@ set_target_properties(ns3::traffic-control PROPERTIES
 add_library(ns3::uan SHARED IMPORTED)
 
 set_target_properties(ns3::uan PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::mobility;ns3::energy"
 )
 
@@ -419,8 +346,8 @@ set_target_properties(ns3::uan PROPERTIES
 add_library(ns3::virtual-net-device SHARED IMPORTED)
 
 set_target_properties(ns3::virtual-net-device PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::network"
 )
 
@@ -428,17 +355,17 @@ set_target_properties(ns3::virtual-net-device PROPERTIES
 add_library(ns3::wifi SHARED IMPORTED)
 
 set_target_properties(ns3::wifi PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
-  INTERFACE_LINK_LIBRARIES "ns3::energy;ns3::spectrum;/opt/homebrew/Cellar/gsl/2.8/lib/libgsl.dylib;/opt/homebrew/Cellar/gsl/2.8/lib/libgslcblas.dylib"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
+  INTERFACE_LINK_LIBRARIES "ns3::energy;ns3::spectrum"
 )
 
 # Create imported target ns3::wimax
 add_library(ns3::wimax SHARED IMPORTED)
 
 set_target_properties(ns3::wimax PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::internet;ns3::propagation"
 )
 
@@ -446,8 +373,8 @@ set_target_properties(ns3::wimax PROPERTIES
 add_library(ns3::zigbee SHARED IMPORTED)
 
 set_target_properties(ns3::zigbee PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;HAVE_GSL;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2;/opt/homebrew/include;/opt/homebrew/Cellar/gsl/2.8/include"
+  INTERFACE_COMPILE_DEFINITIONS "PROJECT_SOURCE_PATH=\"/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45\";__APPLE__;NS3_BUILD_PROFILE_DEBUG;HAVE_SQLITE3;HAVE_LIBXML2;NS3_LOG_ENABLE;NS3_ASSERT_ENABLE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr;/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2"
   INTERFACE_LINK_LIBRARIES "ns3::lr-wpan"
 )
 

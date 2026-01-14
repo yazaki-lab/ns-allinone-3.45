@@ -1,4 +1,4 @@
-# Install script for directory: /Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/config-store
+# Install script for directory: /Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/config-store
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,11 +38,11 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/build/lib/libns3.45-config-store-default.dylib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/build/lib/libns3.45-config-store-default.dylib")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libns3.45-config-store-default.dylib" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libns3.45-config-store-default.dylib")
     execute_process(COMMAND /usr/bin/install_name_tool
-      -delete_rpath "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/build/lib"
+      -delete_rpath "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/build/lib"
       -add_rpath "/usr/local/lib:$ORIGIN/:$ORIGIN/../lib:/usr/local/lib64:$ORIGIN/:$ORIGIN/../lib64"
       "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libns3.45-config-store-default.dylib")
     if(CMAKE_INSTALL_DO_STRIP)
@@ -56,21 +56,21 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/ns3" TYPE FILE FILES
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/config-store/model/file-config.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/config-store/model/config-store.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/build/include/ns3/config-store-module.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/config-store/model/file-config.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/config-store/model/config-store.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/build/include/ns3/config-store-module.h"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/config-store/examples/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/config-store/examples/cmake_install.cmake")
 
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/config-store/install_local_manifest.txt"
+  file(WRITE "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/config-store/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

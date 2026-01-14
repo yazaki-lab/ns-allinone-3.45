@@ -1,4 +1,4 @@
-# Install script for directory: /Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/examples
+# Install script for directory: /Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/examples
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,28 +39,28 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/channel-models/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/energy/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/error-model/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/ipv6/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/matrix-topology/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/naming/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/realtime/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/routing/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/socket/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/stats/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/tcp/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/traffic-control/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/tutorial/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/udp/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/udp-client-server/cmake_install.cmake")
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/wireless/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/channel-models/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/energy/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/error-model/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/ipv6/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/matrix-topology/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/naming/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/realtime/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/routing/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/socket/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/stats/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/tcp/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/traffic-control/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/tutorial/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/udp/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/udp-client-server/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/wireless/cmake_install.cmake")
 
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/install_local_manifest.txt"
+  file(WRITE "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/examples/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

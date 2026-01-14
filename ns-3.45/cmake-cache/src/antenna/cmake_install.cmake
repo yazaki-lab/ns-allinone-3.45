@@ -1,4 +1,4 @@
-# Install script for directory: /Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/antenna
+# Install script for directory: /Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/antenna
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,11 +38,11 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/build/lib/libns3.45-antenna-default.dylib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/build/lib/libns3.45-antenna-default.dylib")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libns3.45-antenna-default.dylib" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libns3.45-antenna-default.dylib")
     execute_process(COMMAND /usr/bin/install_name_tool
-      -delete_rpath "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/build/lib"
+      -delete_rpath "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/build/lib"
       -add_rpath "/usr/local/lib:$ORIGIN/:$ORIGIN/../lib:/usr/local/lib64:$ORIGIN/:$ORIGIN/../lib64"
       "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libns3.45-antenna-default.dylib")
     if(CMAKE_INSTALL_DO_STRIP)
@@ -56,29 +56,28 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/ns3" TYPE FILE FILES
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/circular-aperture-antenna-model.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/angles.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/antenna-model.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/cosine-antenna-model.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/isotropic-antenna-model.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/parabolic-antenna-model.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/phased-array-model.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/three-gpp-antenna-model.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/uniform-planar-array.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/utils/symmetric-adjacency-matrix.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/build/include/ns3/antenna-module.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/angles.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/antenna-model.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/cosine-antenna-model.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/isotropic-antenna-model.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/parabolic-antenna-model.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/phased-array-model.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/three-gpp-antenna-model.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/model/uniform-planar-array.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/antenna/utils/symmetric-adjacency-matrix.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/build/include/ns3/antenna-module.h"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/antenna/examples/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/antenna/examples/cmake_install.cmake")
 
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/antenna/install_local_manifest.txt"
+  file(WRITE "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/antenna/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
