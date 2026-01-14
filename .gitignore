@@ -10,6 +10,7 @@ ns-3.45/build/.*
 ns-3.45/build/scratch/
 ns-3.45/build/build-status.py
 ns-3.45/build/config.log
+ns-3.45/build/
 ns-3.45/build/compile_commands.json
 ns-3.45/examples/
 ns-3.45/.lock-waf*
