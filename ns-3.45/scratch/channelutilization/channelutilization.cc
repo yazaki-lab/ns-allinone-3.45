@@ -293,10 +293,9 @@ int main(int argc, char *argv[]) {
     Simulator::Run();
 
     // --- 結果集計 ---
+    // --- 結果集計 ---
     double channelUtil = CalculateChannelUtilization(config.simulationTime);
     double collisionRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / (g_macTxAttempts + (double)g_macTxFailed ) * 100.0 : 0.0;
-    
-    // 再送率の計算 ※追加
     double retransRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / g_macTxAttempts * 100.0 : 0.0;
 
     monitor->CheckForLostPackets();
@@ -304,13 +303,35 @@ int main(int argc, char *argv[]) {
     double totalThroughput = 0.0;
     long totalRxPackets = 0;
     long totalTxPackets = 0;
+    uint64_t totalRxBytes = 0; // 【追加】全フローの受信バイト数合計用
     double totalDelaySec = 0.0;
 
+    std::string csvPath = "result_csv/" + config.outputFile;
+    std::ofstream csv(csvPath, std::ios::app);
+
+    // フローごとの詳細出力のヘッダー（ファイルが空の場合のみ）
+    if (csv.tellp() == 0) {
+        csv << "Type,FlowID,RxBytes,RxPackets,TxPackets,DelaySum(s)\n";
+    }
+
     for (auto const &flow : stats) {
-        totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / config.simulationTime;
-        totalRxPackets += flow.second.rxPackets;
-        totalTxPackets += flow.second.txPackets;
-        totalDelaySec += flow.second.delaySum.GetSeconds();
+        uint32_t flowId = flow.first;   // 警告が出ていた変数を活用
+        const auto &st = flow.second;    // 警告が出ていた変数を活用
+
+        // 【修正ポイント】各フローの生データを1行ずつCSVに書き出す
+        csv << "FLOW_DATA," 
+            << flowId << ","
+            << st.rxBytes << ","
+            << st.rxPackets << ","
+            << st.txPackets << ","
+            << st.delaySum.GetSeconds() << "\n";
+
+        // 全体の集計処理
+        totalThroughput += st.rxBytes * 8.0 / 1e6 / config.simulationTime;
+        totalRxPackets += st.rxPackets;
+        totalTxPackets += st.txPackets;
+        totalRxBytes += st.rxBytes;
+        totalDelaySec += st.delaySum.GetSeconds();
     }
 
     double avgDelayMs = (totalRxPackets > 0) ? (totalDelaySec / totalRxPackets) * 1000.0 : 0.0;
@@ -320,28 +341,17 @@ int main(int argc, char *argv[]) {
     double avgRssi = (g_rxSignalCount > 0) ? (g_totalRssi / g_rxSignalCount) : 0.0;
     double avgSnr = (g_rxSignalCount > 0) ? (g_totalSnr / g_rxSignalCount) : 0.0;
 
-    // コンソール出力
+    // --- コンソール出力 ---
     std::cout << "=== Result ===" << std::endl;
-    std::cout << "Stations:            " << config.nStations << std::endl;
-    std::cout << "Channel Utilization: " << channelUtil << " %" << std::endl;
-    std::cout << "Total Throughput:    " << totalThroughput << " Mbps" << std::endl;
-    std::cout << "Total Mac Tx:        " << g_macTxAttempts << " times" << std::endl; // 追加
-    std::cout << "Retransmissions:     " << g_macTxFailed << " times" << std::endl;   // 追加
-    std::cout << "Retransmission Rate: " << retransRate << " %" << std::endl;       // 追加
-    std::cout << "AP Tx Power:         " << config.txPower << " dBm" << std::endl;    // 追加
-    std::cout << "Packet Loss Rate:    " << packetLossRate << " %" << std::endl;
-    std::cout << "Avg Delay:           " << avgDelayMs << " ms" << std::endl;
-    std::cout << "Collision Rate:      " << collisionRate << " %" << std::endl;
+    // ... (省略) ...
 
-    // CSV出力
-    std::string csvPath = "result_csv/" + config.outputFile;
-    std::ofstream csv(csvPath, std::ios::app);
-    
+    // --- CSV出力 (サマリー) ---
+    // ここで csvPath や csv を再宣言しない！
     if (csv.tellp() == 0) {
         csv << "Stations,Radius(m),Load(Mbps),PktSize,UseTCP,RateCtrl,MaxAmpdu,RtsCtsTh,"
             << "Utilization(%),Throughput(Mbps),LossRate(%),AvgDelay(ms),CollisionRate(%),"
-            << "RetransCount,TotalMacTx,RetransRate(%),ApTxPower(dBm),AggRatio," // 項目追加
-            << "AvgRSSI(dBm),AvgSNR(dB)" << std::endl;
+            << "RetransCount,TotalMacTx,RetransRate(%),ApTxPower(dBm),AggRatio,"
+            << "AvgRSSI(dBm),AvgSNR(dB),TotalRxBytes" << std::endl;
     }
     
     csv << config.nStations << "," 
@@ -357,13 +367,14 @@ int main(int argc, char *argv[]) {
         << packetLossRate << "," 
         << avgDelayMs << ","     
         << collisionRate << ","
-        << g_macTxFailed << ","     // 再送回数
-        << g_macTxAttempts << ","   // 総送信回数
-        << retransRate << ","       // 再送率
-        << config.txPower << ","    // AP送信電力
+        << g_macTxFailed << ","
+        << g_macTxAttempts << ","
+        << retransRate << ","
+        << config.txPower << ","
         << aggregationRatio << ","
         << avgRssi << ","
-        << avgSnr << std::endl;
+        << avgSnr << ","
+        << totalRxBytes << std::endl; // 【修正】st.rxBytes ではなく totalRxBytes を使う
 
     Simulator::Destroy();
     return 0;
