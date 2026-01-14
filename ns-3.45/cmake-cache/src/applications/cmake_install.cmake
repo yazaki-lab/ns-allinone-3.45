@@ -1,4 +1,4 @@
-# Install script for directory: /Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications
+# Install script for directory: /Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,11 +38,11 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/build/lib/libns3.45-applications-default.dylib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/build/lib/libns3.45-applications-default.dylib")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libns3.45-applications-default.dylib" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libns3.45-applications-default.dylib")
     execute_process(COMMAND /usr/bin/install_name_tool
-      -delete_rpath "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/build/lib"
+      -delete_rpath "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/build/lib"
       -add_rpath "/usr/local/lib:$ORIGIN/:$ORIGIN/../lib:/usr/local/lib64:$ORIGIN/:$ORIGIN/../lib64"
       "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libns3.45-applications-default.dylib")
     if(CMAKE_INSTALL_DO_STRIP)
@@ -56,44 +56,44 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/ns3" TYPE FILE FILES
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/bulk-send-helper.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/on-off-helper.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/packet-sink-helper.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/three-gpp-http-helper.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/udp-client-server-helper.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/udp-echo-helper.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/application-packet-probe.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/bulk-send-application.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/onoff-application.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/packet-loss-counter.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/packet-sink.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/seq-ts-echo-header.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/seq-ts-header.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/seq-ts-size-header.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/sink-application.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/source-application.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/three-gpp-http-client.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/three-gpp-http-header.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/three-gpp-http-server.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/three-gpp-http-variables.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/udp-client.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/udp-echo-client.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/udp-echo-server.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/udp-server.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/udp-trace-client.h"
-    "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/build/include/ns3/applications-module.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/bulk-send-helper.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/on-off-helper.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/packet-sink-helper.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/three-gpp-http-helper.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/udp-client-server-helper.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/helper/udp-echo-helper.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/application-packet-probe.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/bulk-send-application.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/onoff-application.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/packet-loss-counter.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/packet-sink.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/seq-ts-echo-header.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/seq-ts-header.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/seq-ts-size-header.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/sink-application.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/source-application.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/three-gpp-http-client.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/three-gpp-http-header.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/three-gpp-http-server.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/three-gpp-http-variables.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/udp-client.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/udp-echo-client.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/udp-echo-server.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/udp-server.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/src/applications/model/udp-trace-client.h"
+    "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/build/include/ns3/applications-module.h"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/applications/examples/cmake_install.cmake")
+  include("/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/applications/examples/cmake_install.cmake")
 
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/applications/install_local_manifest.txt"
+  file(WRITE "/Users/kamikawa/Desktop/ns-allinone-3.45/ns-3.45/cmake-cache/src/applications/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

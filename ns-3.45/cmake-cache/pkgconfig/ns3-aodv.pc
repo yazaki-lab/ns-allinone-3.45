@@ -8,6 +8,6 @@ URL:
 Version: 3.45
 Requires:  ns3-applications ns3-internet-apps ns3-wifi
 Requires.private: 
-Cflags: -I"${includedir}"  -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr -I/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2 -I/opt/homebrew/include -I/opt/homebrew/Cellar/gsl/2.8/include
+Cflags: -I"${includedir}"  -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr -I/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2
 Libs: -L"${libdir}" -lns3.45-aodv-default  -lns3.45-applications-default -lns3.45-internet-apps-default -lns3.45-wifi-default
 Libs.private: -L"${libdir}" 
