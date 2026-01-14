@@ -244,7 +244,7 @@ int main(int argc, char *argv[]) {
             PacketSinkHelper packetSinkHelper("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), port + i));
             serverApps.Add(packetSinkHelper.Install(wifiApNode.Get(0)));
             BulkSendHelper source("ns3::TcpSocketFactory", serverAddress);
-            source.SetAttribute("MaxBytes", UintegerValue(0)); 
+            source.SetAttribute("MaxBytes", UintegerValue(1024)); 
             clientApps.Add(source.Install(wifiStaNodes.Get(i)));
         } else {
             UdpServerHelper server(port + i);
