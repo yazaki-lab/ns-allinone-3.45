@@ -1,7 +1,6 @@
 /*
- * ns-3 無線LAN チャネル使用率シミュレーション (修正版v4)
- * 対応: IEEE 802.11ac, A-MPDU制御, レート制御切替, TCP/UDP, 衝突率測定
- * 追加: パケットロス率, 平均遅延, 配置半径, RSSI, SNR
+ * ns-3 無線LAN チャネル使用率シミュレーション (修正版v5)
+ * 対応: 再送回数, 総送信回数, 再送率, 送信電力の追加
  */
 
 #include "ns3/core-module.h"
@@ -25,15 +24,14 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE("WifiChannelUtilizationSim");
 
 // --- グローバル集計用変数 ---
-uint64_t g_totalBusyTime = 0;       // チャネルBusy時間 (ns)
-uint64_t g_phyTxFrames = 0;         // 物理層で送信されたフレーム数 (集約後)
-uint64_t g_macTxAttempts = 0;       // MAC層での送信試行回数
-uint64_t g_macTxFailed = 0;         // MAC層での送信失敗回数 (ACK未受信など)
+uint64_t g_totalBusyTime = 0;       
+uint64_t g_phyTxFrames = 0;         
+uint64_t g_macTxAttempts = 0;       // 総送信回数 (初回 + 再送)
+uint64_t g_macTxFailed = 0;         // 再送回数 (ACK未受信による再試行回数)
 
-// RSSI/SNR計測用
-double g_totalRssi = 0.0;           // 合計RSSI (dBm)
-double g_totalSnr = 0.0;            // 合計SNR (dB)
-uint64_t g_rxSignalCount = 0;       // 受信成功数（統計用）
+double g_totalRssi = 0.0;           
+double g_totalSnr = 0.0;            
+uint64_t g_rxSignalCount = 0;       
 
 // --- シミュレーション設定構造体 ---
 struct SimulationConfig {
@@ -42,12 +40,13 @@ struct SimulationConfig {
     uint32_t nHeavyUsers;
     uint32_t nLightUsers;
 
-    double radius;          // 配置半径 (m)
+    double radius;          
     std::string outputFile;
-    uint32_t heavyUserRate; // Mbps
-    uint32_t lightUserRate; // Mbps
-    uint32_t packetSize;    // Byte
-    double simulationTime;  // sec
+    uint32_t heavyUserRate; 
+    uint32_t lightUserRate; 
+    uint32_t packetSize;    
+    double txPower;         // AP送信電力 (dBm) ※追加
+    double simulationTime;  
 
     bool useTcp;            
     bool useMinstrel;       
@@ -61,53 +60,39 @@ struct SimulationConfig {
 
 // --- コールバック関数群 ---
 
-// PHY状態変化 (Busy時間計測)
 void PhyStateChangeCallback(std::string context, Time start, Time duration, WifiPhyState state) {
     if (state == WifiPhyState::TX || state == WifiPhyState::RX || state == WifiPhyState::CCA_BUSY) {
         g_totalBusyTime += duration.GetNanoSeconds();
     }
 }
 
-// PHY送信開始 (集約後の物理フレーム数カウント)
 void PhyTxBeginCallback(std::string context, Ptr<const Packet> p, double txPowerW) {
     g_phyTxFrames++;
 }
 
-// MAC送信失敗 (衝突数の近似計測)
+// MAC層でのデータ送信失敗（再送のトリガー）をカウント
 void MacTxDataFailedCallback(std::string context, Mac48Address addr) {
     g_macTxFailed++;
 }
 
-// MAC送信試行 (衝突率の分母)
+// MAC層での送信試行（総送信回数）をカウント
 void MacTxDataCallback(std::string context, Ptr<const Packet> p) {
     g_macTxAttempts++;
 }
 
-// RSSI/SNR取得用のコールバック (APが受信した信号を計測)
 void MonitorSnifferRxCallback(std::string context, Ptr<const Packet> packet, uint16_t channelFreqMhz, 
                               WifiTxVector txVector, MpduInfo mpduInfo, SignalNoiseDbm signalNoise, uint16_t staId) {
-    g_totalRssi += signalNoise.signal; // dBm
-    g_totalSnr += (signalNoise.signal - signalNoise.noise); // SNR = Signal - Noise
+    g_totalRssi += signalNoise.signal; 
+    g_totalSnr += (signalNoise.signal - signalNoise.noise); 
     g_rxSignalCount++;
 }
 
-// チャネル使用率計算
 double CalculateChannelUtilization(double simulationTimeSec) {
     if (simulationTimeSec <= 0) return 0.0;
     double totalTimeNano = simulationTimeSec * 1000000000.0;
     return (double)g_totalBusyTime / totalTimeNano * 100.0;
 }
 
-// タイムスタンプ生成
-std::string GenerateTimestamp() {
-    time_t now = time(0);
-    struct tm tstruct = *localtime(&now);
-    char buf[80];
-    strftime(buf, sizeof(buf), "%Y%m%d_%H%M%S", &tstruct);
-    return std::string(buf);
-}
-
-// YAML読み込み
 SimulationConfig LoadConfigFromYAML(const std::string& configFile) {
     SimulationConfig config;
     try {
@@ -121,6 +106,7 @@ SimulationConfig LoadConfigFromYAML(const std::string& configFile) {
         config.heavyUserRate = yamlConfig["heavyUserRate"].as<uint32_t>();
         config.lightUserRate = yamlConfig["lightUserRate"].as<uint32_t>();
         config.packetSize = yamlConfig["packetSize"].as<uint32_t>();
+        config.txPower = yamlConfig["txPower"].as<double>(16.0206); // デフォルト値 ※追加
         config.useTcp = yamlConfig["useTcp"].as<bool>(false);
         config.useMinstrel = yamlConfig["useMinstrel"].as<bool>(false);
         config.maxAmpduSize = yamlConfig["maxAmpduSize"].as<uint32_t>(65535); 
@@ -145,6 +131,7 @@ void GenerateDefaultConfig(const std::string& filename) {
     out << "heavyUserRate: 10" << std::endl;
     out << "lightUserRate: 2" << std::endl;
     out << "packetSize: 1500" << std::endl;
+    out << "txPower: 16.0206" << std::endl; // ※追加
     out << "simulationTime: 10.0" << std::endl;
     out << "useTcp: false" << std::endl;
     out << "useMinstrel: false" << std::endl;
@@ -198,6 +185,10 @@ int main(int argc, char *argv[]) {
     YansWifiChannelHelper channel = YansWifiChannelHelper::Default();
     YansWifiPhyHelper phy;
     phy.SetChannel(channel.Create());
+    
+    // YAMLから読み込んだ送信電力を設定 ※追加
+    phy.Set("TxPowerStart", DoubleValue(config.txPower));
+    phy.Set("TxPowerEnd", DoubleValue(config.txPower));
 
     WifiMacHelper mac;
     Ssid ssid = Ssid("ns3-research");
@@ -275,8 +266,6 @@ int main(int argc, char *argv[]) {
                     MakeCallback(&PhyStateChangeCallback));
     Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/PhyTxBegin",
                     MakeCallback(&PhyTxBeginCallback));
-    
-    // AP(Node 0)の受信RSSI/SNRを監視
     Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/MonitorSnifferRx", 
                     MakeCallback(&MonitorSnifferRxCallback));
 
@@ -290,6 +279,12 @@ int main(int argc, char *argv[]) {
         Config::Connect(path2.str(), MakeCallback(&MacTxDataCallback));
     }
 
+    // AP(Node 0)側の送信試行・失敗もカウント対象に含める場合（下り通信メインなら重要）
+    Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/RemoteStationManager/MacTxDataFailed", 
+                    MakeCallback(&MacTxDataFailedCallback));
+    Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Mac/MacTx", 
+                    MakeCallback(&MacTxDataCallback));
+
     FlowMonitorHelper flowmon;
     Ptr<FlowMonitor> monitor = flowmon.InstallAll();
 
@@ -301,6 +296,9 @@ int main(int argc, char *argv[]) {
     double channelUtil = CalculateChannelUtilization(config.simulationTime);
     double collisionRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / (g_macTxAttempts + (double)g_macTxFailed ) * 100.0 : 0.0;
     
+    // 再送率の計算 ※追加
+    double retransRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / g_macTxAttempts * 100.0 : 0.0;
+
     monitor->CheckForLostPackets();
     std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats();
     double totalThroughput = 0.0;
@@ -319,18 +317,18 @@ int main(int argc, char *argv[]) {
     double packetLossRate = (totalTxPackets > 0) ? (1.0 - (double)totalRxPackets / totalTxPackets) * 100.0 : 0.0;
     double aggregationRatio = (g_phyTxFrames > 0) ? (double)totalRxPackets / g_phyTxFrames : 0.0;
 
-    // RSSI/SNR平均値計算
     double avgRssi = (g_rxSignalCount > 0) ? (g_totalRssi / g_rxSignalCount) : 0.0;
     double avgSnr = (g_rxSignalCount > 0) ? (g_totalSnr / g_rxSignalCount) : 0.0;
 
     // コンソール出力
     std::cout << "=== Result ===" << std::endl;
     std::cout << "Stations:            " << config.nStations << std::endl;
-    std::cout << "Radius:              " << config.radius << " m" << std::endl;
     std::cout << "Channel Utilization: " << channelUtil << " %" << std::endl;
     std::cout << "Total Throughput:    " << totalThroughput << " Mbps" << std::endl;
-    std::cout << "Avg RSSI:            " << avgRssi << " dBm" << std::endl;
-    std::cout << "Avg SNR:             " << avgSnr << " dB" << std::endl;
+    std::cout << "Total Mac Tx:        " << g_macTxAttempts << " times" << std::endl; // 追加
+    std::cout << "Retransmissions:     " << g_macTxFailed << " times" << std::endl;   // 追加
+    std::cout << "Retransmission Rate: " << retransRate << " %" << std::endl;       // 追加
+    std::cout << "AP Tx Power:         " << config.txPower << " dBm" << std::endl;    // 追加
     std::cout << "Packet Loss Rate:    " << packetLossRate << " %" << std::endl;
     std::cout << "Avg Delay:           " << avgDelayMs << " ms" << std::endl;
     std::cout << "Collision Rate:      " << collisionRate << " %" << std::endl;
@@ -341,7 +339,8 @@ int main(int argc, char *argv[]) {
     
     if (csv.tellp() == 0) {
         csv << "Stations,Radius(m),Load(Mbps),PktSize,UseTCP,RateCtrl,MaxAmpdu,RtsCtsTh,"
-            << "Utilization(%),Throughput(Mbps),LossRate(%),AvgDelay(ms),CollisionRate(%),AggRatio,"
+            << "Utilization(%),Throughput(Mbps),LossRate(%),AvgDelay(ms),CollisionRate(%),"
+            << "RetransCount,TotalMacTx,RetransRate(%),ApTxPower(dBm),AggRatio," // 項目追加
             << "AvgRSSI(dBm),AvgSNR(dB)" << std::endl;
     }
     
@@ -358,6 +357,10 @@ int main(int argc, char *argv[]) {
         << packetLossRate << "," 
         << avgDelayMs << ","     
         << collisionRate << ","
+        << g_macTxFailed << ","     // 再送回数
+        << g_macTxAttempts << ","   // 総送信回数
+        << retransRate << ","       // 再送率
+        << config.txPower << ","    // AP送信電力
         << aggregationRatio << ","
         << avgRssi << ","
         << avgSnr << std::endl;

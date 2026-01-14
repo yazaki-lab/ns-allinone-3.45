@@ -4,6 +4,7 @@
 # scratch_subdirectories at scratch/CMakeLists.txt:83 (file)
 file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/**")
 set(OLD_GLOB
+  "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/.DS_Store"
   "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/CMakeLists.txt"
   "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/channelutilization"
   "/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/scratch/config.yaml"
