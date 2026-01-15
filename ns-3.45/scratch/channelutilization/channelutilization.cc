@@ -241,11 +241,23 @@ int main(int argc, char *argv[]) {
         Address serverAddress(InetSocketAddress(apInterface.GetAddress(0), port + i));
 
         if (config.useTcp) {
+            // 受信側 (Server: AP)
             PacketSinkHelper packetSinkHelper("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), port + i));
             serverApps.Add(packetSinkHelper.Install(wifiApNode.Get(0)));
-            BulkSendHelper source("ns3::TcpSocketFactory", serverAddress);
-            source.SetAttribute("MaxBytes", UintegerValue(1024)); 
-            clientApps.Add(source.Install(wifiStaNodes.Get(i)));
+
+            // 送信側 (Client: STA)
+            // OnOffHelperを使うと、TCPでも指定レート(DataRate)で送信しようと制御します
+            OnOffHelper onoff("ns3::TcpSocketFactory", serverAddress);
+            
+            // ずっとON(送信状態)にする設定
+            onoff.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1]"));
+            onoff.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0]"));
+            
+            // レートとパケットサイズの設定
+            onoff.SetAttribute("DataRate", DataRateValue(DataRate(std::to_string(dataRateMbps) + "Mbps")));
+            onoff.SetAttribute("PacketSize", UintegerValue(config.packetSize));
+            
+            clientApps.Add(onoff.Install(wifiStaNodes.Get(i)));
         } else {
             UdpServerHelper server(port + i);
             serverApps.Add(server.Install(wifiApNode.Get(0)));
