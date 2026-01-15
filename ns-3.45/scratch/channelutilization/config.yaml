@@ -14,13 +14,8 @@ packetSize: 1500
 txPower: 16.0206  # APの送信電力 (dBm) 
 
 # --- 実験制御スイッチ ---
-<<<<<<< HEAD
 useTcp: true
-useMinstrel: true
-=======
-useTcp: false
 useMinstrel: false
->>>>>>> 908dd628 (macstudioでの動作確認)
 maxAmpduSize: 65535
 rtsCtsThreshold: 65535
 
