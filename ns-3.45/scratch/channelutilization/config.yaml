@@ -1,12 +1,12 @@
 # ns-3 実験用設定ファイル (改良版)
 
 # --- 基本設定 ---
-nStations: 1
+nStations: 40
 heavyUserPercentage: 100
-radius: 5.0  # 大きくする(隠れ端末)
+radius: 10.0  # 大きくする(隠れ端末)
 
 # --- トラフィック負荷 ---
-heavyUserRate: 500  # Mbps
+heavyUserRate: 5  # Mbps
 lightUserRate: 0
 packetSize: 1500  
 
@@ -20,7 +20,7 @@ maxAmpduSize: 65535
 rtsCtsThreshold: 65535
 
 # --- 出力設定 ---
-outputFile: "cu_0116.csv"
+outputFile: "cu_0116_stations.csv"
 simulationTime: 30.0
 enableTxtOutput: true
 enableNetAnim: false
