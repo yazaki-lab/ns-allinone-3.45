@@ -246,7 +246,7 @@ int main(int argc, char *argv[]) {
             serverApps.Add(packetSinkHelper.Install(wifiApNode.Get(0)));
 
             // 送信側 (Client: STA)
-            // OnOffHelperを使うと、TCPでも指定レート(DataRate)で送信しようと制御します
+            // OnOffHelperを使うと、TCPでも指定レート(DataRate)で送信しようと制御
             OnOffHelper onoff("ns3::TcpSocketFactory", serverAddress);
             
             // ずっとON(送信状態)にする設定
@@ -319,7 +319,8 @@ int main(int argc, char *argv[]) {
     double totalDelaySec = 0.0;
 
     for (auto const &flow : stats) {
-        totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / config.simulationTime;
+        totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / (flow.second.timeLastRxPacket.GetSeconds() - flow.second.timeFirstTxPacket.GetSeconds());
+        //totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / config.simulationTime;//変える
         totalRxPackets += flow.second.rxPackets;
         totalTxPackets += flow.second.txPackets;
         totalDelaySec += flow.second.delaySum.GetSeconds();
