@@ -3,7 +3,7 @@
 # --- 基本設定 ---
 nStations: 1
 heavyUserPercentage: 100
-radius: 25.0  # 大きくする(隠れ端末)
+radius: 5.0  # 大きくする(隠れ端末)
 
 # --- トラフィック負荷 ---
 heavyUserRate: 500  # Mbps
@@ -20,7 +20,7 @@ maxAmpduSize: 65535
 rtsCtsThreshold: 65535
 
 # --- 出力設定 ---
-outputFile: "cu_example_0115.csv"
+outputFile: "cu_0116.csv"
 simulationTime: 30.0
 enableTxtOutput: true
 enableNetAnim: false
