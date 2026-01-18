@@ -24,14 +24,14 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE("WifiChannelUtilizationSim");
 
 // --- グローバル集計用変数 ---
-uint64_t g_totalBusyTime = 0;       
-uint64_t g_phyTxFrames = 0;         
+uint64_t g_totalBusyTime = 0;
+uint64_t g_phyTxFrames = 0;
 uint64_t g_macTxAttempts = 0;       // 総送信回数 (初回 + 再送)
 uint64_t g_macTxFailed = 0;         // 再送回数 (ACK未受信による再試行回数)
 
-double g_totalRssi = 0.0;           
-double g_totalSnr = 0.0;            
-uint64_t g_rxSignalCount = 0;       
+double g_totalRssi = 0.0;
+double g_totalSnr = 0.0;
+uint64_t g_rxSignalCount = 0;
 
 // --- シミュレーション設定構造体 ---
 struct SimulationConfig {
@@ -40,18 +40,18 @@ struct SimulationConfig {
     uint32_t nHeavyUsers;
     uint32_t nLightUsers;
 
-    double radius;          
+    double radius;
     std::string outputFile;
-    uint32_t heavyUserRate; 
-    uint32_t lightUserRate; 
-    uint32_t packetSize;    
-    double txPower;         // AP送信電力 (dBm) ※追加
-    double simulationTime;  
+    uint32_t heavyUserRate;
+    uint32_t lightUserRate;
+    uint32_t packetSize;
+    double txPower;         // AP送信電力 (dBm)
+    double simulationTime;
 
-    bool useTcp;            
-    bool useMinstrel;       
-    uint32_t maxAmpduSize;  
-    uint32_t rtsCtsThreshold; 
+    bool useTcp;
+    bool useMinstrel;
+    uint32_t maxAmpduSize;
+    uint32_t rtsCtsThreshold;
 
     bool enableTxtOutput;
     bool enableNetAnim;
@@ -82,8 +82,8 @@ void MacTxDataCallback(std::string context, Ptr<const Packet> p) {
 
 void MonitorSnifferRxCallback(std::string context, Ptr<const Packet> packet, uint16_t channelFreqMhz, 
                               WifiTxVector txVector, MpduInfo mpduInfo, SignalNoiseDbm signalNoise, uint16_t staId) {
-    g_totalRssi += signalNoise.signal; 
-    g_totalSnr += (signalNoise.signal - signalNoise.noise); 
+    g_totalRssi += signalNoise.signal;
+    g_totalSnr += (signalNoise.signal - signalNoise.noise);
     g_rxSignalCount++;
 }
 
@@ -109,8 +109,8 @@ SimulationConfig LoadConfigFromYAML(const std::string& configFile) {
         config.txPower = yamlConfig["txPower"].as<double>(16.0206); // デフォルト値 ※追加
         config.useTcp = yamlConfig["useTcp"].as<bool>(false);
         config.useMinstrel = yamlConfig["useMinstrel"].as<bool>(false);
-        config.maxAmpduSize = yamlConfig["maxAmpduSize"].as<uint32_t>(65535); 
-        config.rtsCtsThreshold = yamlConfig["rtsCtsThreshold"].as<uint32_t>(2347); 
+        config.maxAmpduSize = yamlConfig["maxAmpduSize"].as<uint32_t>(65535);
+        config.rtsCtsThreshold = yamlConfig["rtsCtsThreshold"].as<uint32_t>(2347);
         config.simulationTime = yamlConfig["simulationTime"].as<double>(10.0);
         config.enableTxtOutput = yamlConfig["enableTxtOutput"].as<bool>(true);
         config.enableNetAnim = yamlConfig["enableNetAnim"].as<bool>(false);
@@ -147,10 +147,10 @@ int main(int argc, char *argv[]) {
     RngSeedManager::SetSeed(1);
     RngSeedManager::SetRun(1);
 
-    std::string configFile = "config.yaml";
-    bool generateConfig = false;
+    std::string configFile = "config.yaml";//標準ライブラリの文字列型を使用する．"config.yaml"という名前のYAMLファイルを指定(変数configFileは自由に変更可)
+    bool generateConfig = false;//設定ファイルを作ってくれる変数．基本はoff
 
-    CommandLine cmd;
+    CommandLine cmd;//コマンドラインからも設定を受け取れるようにする
     cmd.AddValue("config", "YAML config file", configFile);
     cmd.AddValue("generate-config", "Generate default config", generateConfig);
     cmd.Parse(argc, argv);
@@ -160,51 +160,51 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    SimulationConfig config = LoadConfigFromYAML(configFile);
+    SimulationConfig config = LoadConfigFromYAML(configFile);//YAMLファイルから設定を読み込む
 
     if (config.verbose) {
-        LogComponentEnable("WifiChannelUtilizationSim", LOG_LEVEL_INFO);
+        LogComponentEnable("WifiChannelUtilizationSim", LOG_LEVEL_INFO);//ログ出力を有効化
     }
 
     NodeContainer wifiApNode;
-    wifiApNode.Create(1);
+    wifiApNode.Create(1);//APノードを1台作成
     NodeContainer wifiStaNodes;
-    wifiStaNodes.Create(config.nStations);
+    wifiStaNodes.Create(config.nStations);//stationノードを設定数だけ作成
 
     WifiHelper wifi;
-    wifi.SetStandard(WIFI_STANDARD_80211ac);
+    wifi.SetStandard(WIFI_STANDARD_80211ax);//802.11axを使用
 
-    if (config.useMinstrel) {
-        wifi.SetRemoteStationManager("ns3::MinstrelHtWifiManager");
+    if (config.useMinstrel) {//Minstrelを使用するかどうかの分岐
+        wifi.SetRemoteStationManager("ns3::MinstrelHtWifiManager");//Minstrelを使用
     } else {
-        wifi.SetRemoteStationManager("ns3::ConstantRateWifiManager",
-                                     "DataMode", StringValue("VhtMcs8"),
-                                     "ControlMode", StringValue("VhtMcs0"));
+        wifi.SetRemoteStationManager("ns3::ConstantRateWifiManager",//固定レートを使用
+                                     "DataMode", StringValue("VhtMcs8"),//送信モード
+                                     "ControlMode", StringValue("VhtMcs0"));//制御モード
     }
 
-    YansWifiChannelHelper channel = YansWifiChannelHelper::Default();
-    YansWifiPhyHelper phy;
-    phy.SetChannel(channel.Create());
-    
-    // YAMLから読み込んだ送信電力を設定 ※追加
+    YansWifiChannelHelper channel = YansWifiChannelHelper::Default();//デフォルトのチャネルモデルを使用
+    YansWifiPhyHelper phy;//PHYヘルパーを作成
+    phy.SetChannel(channel.Create());//PHY層(L1)の設定
+
+    // YAMLから読み込んだ送信電力を設定
     phy.Set("TxPowerStart", DoubleValue(config.txPower));
     phy.Set("TxPowerEnd", DoubleValue(config.txPower));
 
     WifiMacHelper mac;
-    Ssid ssid = Ssid("ns3-research");
+    Ssid ssid = Ssid("ns3-research");//ssidを設定．シンプルにするため1つだけ
 
-    mac.SetType("ns3::ApWifiMac", 
+    mac.SetType("ns3::ApWifiMac",
                 "Ssid", SsidValue(ssid),
-                "BE_MaxAmpduSize", UintegerValue(config.maxAmpduSize)); 
-    NetDeviceContainer apDevice = wifi.Install(phy, mac, wifiApNode);
+                "BE_MaxAmpduSize", UintegerValue(config.maxAmpduSize));//AP用のMAC設定
+    NetDeviceContainer apDevice = wifi.Install(phy, mac, wifiApNode);//APノードにデバイスをインストール
 
-    mac.SetType("ns3::StaWifiMac", 
-                "Ssid", SsidValue(ssid), 
+    mac.SetType("ns3::StaWifiMac",//STA用のMAC設定
+                "Ssid", SsidValue(ssid),
                 "ActiveProbing", BooleanValue(false),
-                "BE_MaxAmpduSize", UintegerValue(config.maxAmpduSize)); 
+                "BE_MaxAmpduSize", UintegerValue(config.maxAmpduSize));
     NetDeviceContainer staDevices = wifi.Install(phy, mac, wifiStaNodes);
 
-    for (uint32_t i = 0; i < apDevice.GetN(); ++i) {
+    for (uint32_t i = 0; i < apDevice.GetN(); ++i) {//RtsCtsThresholdの設定．隠れ端末を防ぐ，必要に応じて有効化
         Ptr<WifiNetDevice> dev = DynamicCast<WifiNetDevice>(apDevice.Get(i));
         dev->GetRemoteStationManager()->SetAttribute("RtsCtsThreshold", UintegerValue(config.rtsCtsThreshold));
     }
@@ -213,7 +213,7 @@ int main(int argc, char *argv[]) {
         dev->GetRemoteStationManager()->SetAttribute("RtsCtsThreshold", UintegerValue(config.rtsCtsThreshold));
     }
 
-    MobilityHelper mobility;
+    MobilityHelper mobility;//ノードの位置設定
     Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator>();
     positionAlloc->Add(Vector(0.0, 0.0, 0.0)); // AP
     for (uint32_t i = 0; i < config.nStations; ++i) {
@@ -222,44 +222,46 @@ int main(int argc, char *argv[]) {
     }
     mobility.SetPositionAllocator(positionAlloc);
     mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
-    mobility.Install(wifiApNode);
+    mobility.Install(wifiApNode);//ここでノードを実際に設置する
     mobility.Install(wifiStaNodes);
 
     InternetStackHelper stack;
-    stack.Install(wifiApNode);
+    stack.Install(wifiApNode);//TCP/IPプロトコルスタックをインストール
     stack.Install(wifiStaNodes);
     Ipv4AddressHelper address;
-    address.SetBase("10.1.1.0", "255.255.255.0");
-    Ipv4InterfaceContainer apInterface = address.Assign(apDevice);
+    address.SetBase("10.1.1.0", "255.255.255.0");//IPアドレスの設定
+    Ipv4InterfaceContainer apInterface = address.Assign(apDevice);//APのIPアドレス割り当て．Assignが賢いので1つづつ順番に割り当ててくれる
     Ipv4InterfaceContainer staInterfaces = address.Assign(staDevices);
 
     ApplicationContainer serverApps, clientApps;
     uint16_t port = 9000;
 
     for (uint32_t i = 0; i < config.nStations; ++i) {
-        uint32_t dataRateMbps = (i < config.nHeavyUsers) ? config.heavyUserRate : config.lightUserRate;
-        Address serverAddress(InetSocketAddress(apInterface.GetAddress(0), port + i));
+        uint32_t dataRateMbps = (i < config.nHeavyUsers) ? config.heavyUserRate : config.lightUserRate;//重ユーザと軽ユーザでレートを分ける
+        Address serverAddress(InetSocketAddress(apInterface.GetAddress(0), port + i));//サーバーアドレスの設定
 
         if (config.useTcp) {
             // 受信側 (Server: AP)
             PacketSinkHelper packetSinkHelper("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), port + i));
+            //TCPのソケットを作成する，
             serverApps.Add(packetSinkHelper.Install(wifiApNode.Get(0)));
 
             // 送信側 (Client: STA)
             // OnOffHelperを使うと、TCPでも指定レート(DataRate)で送信しようと制御
+            // 送信プロトコルがTCPの場合，アプリ側でずっと送信状態にしてもTCP側で制御される
             OnOffHelper onoff("ns3::TcpSocketFactory", serverAddress);
-            
+
             // ずっとON(送信状態)にする設定
             onoff.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1]"));
             onoff.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0]"));
-            
+
             // レートとパケットサイズの設定
-            onoff.SetAttribute("DataRate", DataRateValue(DataRate(std::to_string(dataRateMbps) + "Mbps")));
-            onoff.SetAttribute("PacketSize", UintegerValue(config.packetSize));
-            
+            onoff.SetAttribute("DataRate", DataRateValue(DataRate(std::to_string(dataRateMbps) + "Mbps")));//yamlで指定した指定レートで送信
+            onoff.SetAttribute("PacketSize", UintegerValue(config.packetSize));//yamlで指定したパケットサイズで送信
+
             clientApps.Add(onoff.Install(wifiStaNodes.Get(i)));
         } else {
-            UdpServerHelper server(port + i);
+            UdpServerHelper server(port + i);//UDPサーバーの設定
             serverApps.Add(server.Install(wifiApNode.Get(0)));
             UdpClientHelper client(apInterface.GetAddress(0), port + i);
             double interval = (config.packetSize * 8.0) / (dataRateMbps * 1e6);
@@ -275,20 +277,23 @@ int main(int argc, char *argv[]) {
 
     // --- トレース接続 ---
     Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/State/State",
-                    MakeCallback(&PhyStateChangeCallback));
+                    MakeCallback(&PhyStateChangeCallback));//AP(Node 0)のPHY状態変化を監視
     Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/PhyTxBegin",
-                    MakeCallback(&PhyTxBeginCallback));
+                    MakeCallback(&PhyTxBeginCallback));//AP(Node 0)のPHY送信開始を監視
     Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/MonitorSnifferRx", 
-                    MakeCallback(&MonitorSnifferRxCallback));
+                    MakeCallback(&MonitorSnifferRxCallback));//AP(Node 0)の受信パケットを監視
 
     for(uint32_t i=0; i<config.nStations; i++){
-        std::stringstream path;
+        std::stringstream path;//STAノードのMAC送信試行・失敗を監視する文字列
         path << "/NodeList/" << (i+1) << "/DeviceList/*/$ns3::WifiNetDevice/RemoteStationManager/MacTxDataFailed";
-        Config::Connect(path.str(), MakeCallback(&MacTxDataFailedCallback));
-        
-        std::stringstream path2;
+        //Nodeリストの (i+1)番目のPC にあるデバイスリストの中の
+        // Wi-Fiデバイス型であるもののうち， 通信管理マネージャーの中にある
+        //『送信失敗（MacTxDataFailed）』という名前の監視ポイント
+        Config::Connect(path.str(), MakeCallback(&MacTxDataFailedCallback));//STA側の送信失敗もカウント対象に含める
+
+        std::stringstream path2;//STAノードのMAC送信試行を監視
         path2 << "/NodeList/" << (i+1) << "/DeviceList/*/$ns3::WifiNetDevice/Mac/MacTx";
-        Config::Connect(path2.str(), MakeCallback(&MacTxDataCallback));
+        Config::Connect(path2.str(), MakeCallback(&MacTxDataCallback));//STA側の送信試行もカウント対象に含める
     }
 
     // AP(Node 0)側の送信試行・失敗もカウント対象に含める場合（下り通信メインなら重要）
@@ -307,8 +312,8 @@ int main(int argc, char *argv[]) {
     // --- 結果集計 ---
     double channelUtil = CalculateChannelUtilization(config.simulationTime);
     double collisionRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / (g_macTxAttempts + (double)g_macTxFailed ) * 100.0 : 0.0;
-    
-    // 再送率の計算 ※追加
+
+    // 再送率の計算
     double retransRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / g_macTxAttempts * 100.0 : 0.0;
 
     monitor->CheckForLostPackets();
@@ -338,10 +343,10 @@ int main(int argc, char *argv[]) {
     std::cout << "Stations:            " << config.nStations << std::endl;
     std::cout << "Channel Utilization: " << channelUtil << " %" << std::endl;
     std::cout << "Total Throughput:    " << totalThroughput << " Mbps" << std::endl;
-    std::cout << "Total Mac Tx:        " << g_macTxAttempts << " times" << std::endl; // 追加
-    std::cout << "Retransmissions:     " << g_macTxFailed << " times" << std::endl;   // 追加
-    std::cout << "Retransmission Rate: " << retransRate << " %" << std::endl;       // 追加
-    std::cout << "AP Tx Power:         " << config.txPower << " dBm" << std::endl;    // 追加
+    std::cout << "Total Mac Tx:        " << g_macTxAttempts << " times" << std::endl;
+    std::cout << "Retransmissions:     " << g_macTxFailed << " times" << std::endl;
+    std::cout << "Retransmission Rate: " << retransRate << " %" << std::endl;
+    std::cout << "AP Tx Power:         " << config.txPower << " dBm" << std::endl;
     std::cout << "Packet Loss Rate:    " << packetLossRate << " %" << std::endl;
     std::cout << "Avg Delay:           " << avgDelayMs << " ms" << std::endl;
     std::cout << "Collision Rate:      " << collisionRate << " %" << std::endl;
@@ -349,17 +354,17 @@ int main(int argc, char *argv[]) {
     // CSV出力
     std::string csvPath = "result_csv/" + config.outputFile;
     std::ofstream csv(csvPath, std::ios::app);
-    
+
     if (csv.tellp() == 0) {
         csv << "Stations,Radius(m),Load(Mbps),PktSize,UseTCP,RateCtrl,MaxAmpdu,RtsCtsTh,"
             << "Utilization(%),Throughput(Mbps),LossRate(%),AvgDelay(ms),CollisionRate(%),"
             << "RetransCount,TotalMacTx,RetransRate(%),ApTxPower(dBm),AggRatio," // 項目追加
             << "AvgRSSI(dBm),AvgSNR(dB)" << std::endl;
     }
-    
-    csv << config.nStations << "," 
-        << config.radius << "," 
-        << (config.nHeavyUsers * config.heavyUserRate) << "," 
+
+    csv << config.nStations << ","
+        << config.radius << ","
+        << (config.nHeavyUsers * config.heavyUserRate) << ","
         << config.packetSize << ","
         << (config.useTcp ? "TCP" : "UDP") << ","
         << (config.useMinstrel ? "Auto" : "Fixed") << ","
@@ -367,8 +372,8 @@ int main(int argc, char *argv[]) {
         << config.rtsCtsThreshold << ","
         << channelUtil << ","
         << totalThroughput << ","
-        << packetLossRate << "," 
-        << avgDelayMs << ","     
+        << packetLossRate << ","
+        << avgDelayMs << ","
         << collisionRate << ","
         << g_macTxFailed << ","     // 再送回数
         << g_macTxAttempts << ","   // 総送信回数
