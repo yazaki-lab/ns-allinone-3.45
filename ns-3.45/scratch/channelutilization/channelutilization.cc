@@ -353,65 +353,18 @@ int main(int argc, char *argv[]) {
 
     //=============================================================
     //=============================================================
-    //         結果集計 
+    //         結果集計
     //=============================================================
-    //=============================================================
-    // double channelUtil = CalculateChannelUtilization(config.simulationTime);
-    // double collisionRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / (g_macTxAttempts + (double)g_macTxFailed ) * 100.0 : 0.0;
-
-    // // 再送率の計算
-    // double retransRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / g_macTxAttempts * 100.0 : 0.0;
-
-    // monitor->CheckForLostPackets();
-    
-    // // フロー識別子の取得とポートフィルタリング準備
-    // Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
-    // std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats();
-    
-    // double totalThroughput = 0.0;
-    // long totalRxPackets = 0;
-    // long totalTxPackets = 0;
-    // double totalDelaySec = 0.0;
-
-
-    // for (auto const &flow : stats) {
-    //     // ポート番号によるフィルタリング (戻りACK除外)
-    //     Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow(flow.first);
-        
-    //     // デバッグ用: 9000番台以外のポートが混ざっていないか確認
-    //     if (t.destinationPort < 9000) {
-    //         std::cout << "Warning: Counting non-server port packet! Port: " << t.destinationPort << std::endl;
-    //     }
-    //     // 宛先ポートがサーバーポート(9000番台)の範囲内かチェック
-    //     if (t.destinationPort >= 9000 && t.destinationPort < 9000 + config.nStations) {
-            
-    //         // ----フローごとの受信期間を計算 ---
-    //         double flowDuration = flow.second.timeLastRxPacket.GetSeconds() - flow.second.timeFirstRxPacket.GetSeconds();
-
-    //         // 安全策: パケットが1つしか届かなかった場合や同時刻の場合のゼロ除算を防ぐ
-    //         if (flowDuration <= 0.0) {
-    //             // 期間が計測できない場合は無視するか、1パケット分の時間などを仮定する
-    //             // ここでは極端な値にならないよう、便宜上 1.0秒 または 無視する処理にします
-    //             continue; 
-    //         }
-    //         // データフローのみ集計
-    //         totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / flowDuration;
-            
-    //         totalRxPackets += flow.second.rxPackets;
-    //         totalTxPackets += flow.second.txPackets;
-    //         totalDelaySec += flow.second.delaySum.GetSeconds();
-    //     }
-    // }
-
-    //=============================================================
-    //以下デバッグ用の追加情報
     //=============================================================
     double channelUtil = CalculateChannelUtilization(config.simulationTime);
     double collisionRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / (g_macTxAttempts + (double)g_macTxFailed ) * 100.0 : 0.0;
+
+    // 再送率の計算
     double retransRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / g_macTxAttempts * 100.0 : 0.0;
 
     monitor->CheckForLostPackets();
 
+    // フロー識別子の取得とポートフィルタリング準備
     Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
     std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats();
 
@@ -420,65 +373,103 @@ int main(int argc, char *argv[]) {
     long totalTxPackets = 0;
     double totalDelaySec = 0.0;
 
-    // === 情報追加 ===
-    std::cout << "\n=== Flow Debug Information ===" << std::endl;
-    double expectedTotalRate = 0.0;
-    for (uint32_t i = 0; i < config.nStations; ++i) {
-        uint32_t rate = (i < config.nHeavyUsers) ? config.heavyUserRate : config.lightUserRate;
-        expectedTotalRate += rate;
-    }
-    std::cout << "Expected Total Rate: " << expectedTotalRate << " Mbps" << std::endl;
-    std::cout << "Simulation Time: " << config.simulationTime << " sec" << std::endl;
-    std::cout << "Client Start Time: 1.0 sec" << std::endl;
-    std::cout << "Actual Tx Duration: " << (config.simulationTime - 1.0) << " sec" << std::endl;
 
-    int flowIndex = 0;
     for (auto const &flow : stats) {
+        // ポート番号によるフィルタリング (戻りACK除外)
         Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow(flow.first);
-        
+
+        // デバッグ用: 9000番台以外のポートが混ざっていないか確認
+        if (t.destinationPort < 9000) {
+            std::cout << "Warning: Counting non-server port packet! Port: " << t.destinationPort << std::endl;
+        }
+        // 宛先ポートがサーバーポート(9000番台)の範囲内かチェック
         if (t.destinationPort >= 9000 && t.destinationPort < 9000 + config.nStations) {
-            flowIndex++;
-            
-            double firstRx = flow.second.timeFirstRxPacket.GetSeconds();
-            double lastRx = flow.second.timeLastRxPacket.GetSeconds();
-            double flowDuration = lastRx - firstRx;
-            
-            double flowThroughput = flow.second.rxBytes * 8.0 / 1e6 / flowDuration;
-            
-            std::cout << "\nFlow " << flowIndex << " (Port " << t.destinationPort << "):" << std::endl;
-            std::cout << "  First Rx: " << firstRx << " sec" << std::endl;
-            std::cout << "  Last Rx:  " << lastRx << " sec" << std::endl;
-            std::cout << "  Duration: " << flowDuration << " sec" << std::endl;
-            std::cout << "  Rx Bytes: " << flow.second.rxBytes << std::endl;
-            std::cout << "  Rx Pkts:  " << flow.second.rxPackets << std::endl;
-            std::cout << "  Tx Pkts:  " << flow.second.txPackets << std::endl;
-            std::cout << "  Throughput (flow-based): " << flowThroughput << " Mbps" << std::endl;
-            
-            // 全体の送信時間で計算した場合
-            double throughputBySimTime = flow.second.rxBytes * 8.0 / 1e6 / config.simulationTime;
-            double throughputByActualTx = flow.second.rxBytes * 8.0 / 1e6 / (config.simulationTime - 1.0);
-            std::cout << "  Throughput (sim-time):   " << throughputBySimTime << " Mbps" << std::endl;
-            std::cout << "  Throughput (actual-tx):  " << throughputByActualTx << " Mbps" << std::endl;
-            
-            if (flowDuration <= 0.0) {
-                std::cout << "  WARNING: Invalid flow duration!" << std::endl;
-                continue;
-            }
-            
-            totalThroughput += flowThroughput;
+
+            // データフローのみ集計
+            totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / config.simulationTime;
+
             totalRxPackets += flow.second.rxPackets;
             totalTxPackets += flow.second.txPackets;
             totalDelaySec += flow.second.delaySum.GetSeconds();
         }
     }
 
-std::cout << "\n=== Throughput Comparison ===" << std::endl;
-std::cout << "Expected:  " << expectedTotalRate << " Mbps" << std::endl;
-std::cout << "Measured:  " << totalThroughput << " Mbps" << std::endl;
-std::cout << "Difference: " << (totalThroughput - expectedTotalRate) << " Mbps (" 
-          << ((totalThroughput - expectedTotalRate) / expectedTotalRate * 100.0) << " %)" << std::endl;
+//     //=============================================================
+//     //以下デバッグ用の追加情報
+//     //=============================================================
+//     double channelUtil = CalculateChannelUtilization(config.simulationTime);
+//     double collisionRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / (g_macTxAttempts + (double)g_macTxFailed ) * 100.0 : 0.0;
+//     double retransRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / g_macTxAttempts * 100.0 : 0.0;
 
-// 以降は元のコンソール出力とCSV出力を続ける
+//     monitor->CheckForLostPackets();
+
+//     Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
+//     std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats();
+
+//     double totalThroughput = 0.0;
+//     long totalRxPackets = 0;
+//     long totalTxPackets = 0;
+//     double totalDelaySec = 0.0;
+
+//     // === 情報追加 ===
+//     std::cout << "\n=== Flow Debug Information ===" << std::endl;
+//     double expectedTotalRate = 0.0;
+//     for (uint32_t i = 0; i < config.nStations; ++i) {
+//         uint32_t rate = (i < config.nHeavyUsers) ? config.heavyUserRate : config.lightUserRate;
+//         expectedTotalRate += rate;
+//     }
+//     std::cout << "Expected Total Rate: " << expectedTotalRate << " Mbps" << std::endl;
+//     std::cout << "Simulation Time: " << config.simulationTime << " sec" << std::endl;
+//     std::cout << "Client Start Time: 1.0 sec" << std::endl;
+//     std::cout << "Actual Tx Duration: " << (config.simulationTime - 1.0) << " sec" << std::endl;
+
+//     int flowIndex = 0;
+//     for (auto const &flow : stats) {
+//         Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow(flow.first);
+
+//         if (t.destinationPort >= 9000 && t.destinationPort < 9000 + config.nStations) {
+//             flowIndex++;
+
+//             double firstRx = flow.second.timeFirstRxPacket.GetSeconds();
+//             double lastRx = flow.second.timeLastRxPacket.GetSeconds();
+//             double flowDuration = lastRx - firstRx;
+
+//             double flowThroughput = flow.second.rxBytes * 8.0 / 1e6 / flowDuration;
+
+//             std::cout << "\nFlow " << flowIndex << " (Port " << t.destinationPort << "):" << std::endl;
+//             std::cout << "  First Rx: " << firstRx << " sec" << std::endl;
+//             std::cout << "  Last Rx:  " << lastRx << " sec" << std::endl;
+//             std::cout << "  Duration: " << flowDuration << " sec" << std::endl;
+//             std::cout << "  Rx Bytes: " << flow.second.rxBytes << std::endl;
+//             std::cout << "  Rx Pkts:  " << flow.second.rxPackets << std::endl;
+//             std::cout << "  Tx Pkts:  " << flow.second.txPackets << std::endl;
+//             std::cout << "  Throughput (flow-based): " << flowThroughput << " Mbps" << std::endl;
+
+//             // 全体の送信時間で計算した場合
+//             double throughputBySimTime = flow.second.rxBytes * 8.0 / 1e6 / config.simulationTime;
+//             double throughputByActualTx = flow.second.rxBytes * 8.0 / 1e6 / (config.simulationTime - 1.0);
+//             std::cout << "  Throughput (sim-time):   " << throughputBySimTime << " Mbps" << std::endl;
+//             std::cout << "  Throughput (actual-tx):  " << throughputByActualTx << " Mbps" << std::endl;
+
+//             if (flowDuration <= 0.0) {
+//                 std::cout << "  WARNING: Invalid flow duration!" << std::endl;
+//                 continue;
+//             }
+
+//             totalThroughput += flowThroughput;
+//             totalRxPackets += flow.second.rxPackets;
+//             totalTxPackets += flow.second.txPackets;
+//             totalDelaySec += flow.second.delaySum.GetSeconds();
+//         }
+//     }
+
+// std::cout << "\n=== Throughput Comparison ===" << std::endl;
+// std::cout << "Expected:  " << expectedTotalRate << " Mbps" << std::endl;
+// std::cout << "Measured:  " << totalThroughput << " Mbps" << std::endl;
+// std::cout << "Difference: " << (totalThroughput - expectedTotalRate) << " Mbps (" 
+//           << ((totalThroughput - expectedTotalRate) / expectedTotalRate * 100.0) << " %)" << std::endl;
+
+// 以降はコンソール出力とCSV出力を続ける
     double avgDelayMs = (totalRxPackets > 0) ? (totalDelaySec / totalRxPackets) * 1000.0 : 0.0;
     double packetLossRate = (totalTxPackets > 0) ? (1.0 - (double)totalRxPackets / totalTxPackets) * 100.0 : 0.0;
     double aggregationRatio = (g_phyTxFrames > 0) ? (double)totalRxPackets / g_phyTxFrames : 0.0;
