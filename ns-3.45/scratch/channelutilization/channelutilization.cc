@@ -23,15 +23,26 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE("WifiChannelUtilizationSim");
 
-// --- グローバル集計用変数 ---
-uint64_t g_totalBusyTime = 0;
-uint64_t g_phyTxFrames = 0;
-uint64_t g_macTxAttempts = 0;       // 総送信回数 (初回 + 再送)
-uint64_t g_macTxFailed = 0;         // 再送回数 (ACK未受信による再試行回数)
+// ================================
+// L1 (PHY層): 無線チャネル占有・物理送信
+// ================================
+uint64_t g_totalBusyTime = 0;   // 【L1】PHYがTX/RX/CCA_BUSYだった累積時間(ns)
+uint64_t g_phyTxFrames = 0;     // 【L1】PHYレベルで送信開始したフレーム数
+                               //      ※ACK, RTS/CTS, 再送も全て含む
 
-double g_totalRssi = 0.0;
-double g_totalSnr = 0.0;
-uint64_t g_rxSignalCount = 0;
+// ================================
+// L2 (MAC層): CSMA/CA・再送制御
+// ================================
+uint64_t g_macTxAttempts = 0;   // 【L2】MAC層での送信試行回数（初回+再送）
+uint64_t g_macTxFailed = 0;     // 【L2】ACK未受信による再送発生回数
+
+// ================================
+// L1 (PHY層): 受信信号品質
+// ================================
+double g_totalRssi = 0.0;       // 【L1】受信信号強度(dBm)
+double g_totalSnr = 0.0;        // 【L1】SNR(dB)
+uint64_t g_rxSignalCount = 0;   // 【L1】受信サンプル数
+
 
 // --- シミュレーション設定構造体 ---
 struct SimulationConfig {
@@ -60,32 +71,63 @@ struct SimulationConfig {
 
 // --- コールバック関数群 ---
 
-void PhyStateChangeCallback(std::string context, Time start, Time duration, WifiPhyState state) {
-    if (state == WifiPhyState::TX || state == WifiPhyState::RX || state == WifiPhyState::CCA_BUSY) {
+void PhyStateChangeCallback(std::string context,Time start,Time duration,WifiPhyState state)
+{
+    // 【L1】PHY層の状態変化
+    // TX: 送信中
+    // RX: 受信中
+    // CCA_BUSY: 他局送信によるキャリア検知
+    if (state == WifiPhyState::TX ||
+        state == WifiPhyState::RX ||
+        state == WifiPhyState::CCA_BUSY)
+    {
+        // 【L1】チャネルが占有されていた時間
         g_totalBusyTime += duration.GetNanoSeconds();
     }
 }
 
-void PhyTxBeginCallback(std::string context, Ptr<const Packet> p, double txPowerW) {
+
+void PhyTxBeginCallback(std::string context,
+                        Ptr<const Packet> p,
+                        double txPowerW)
+{
+    // 【L1】PHYレベルで「送信が始まった」回数
+    // データ・ACK・RTS/CTS・再送を全て含む
     g_phyTxFrames++;
 }
 
-// MAC層でのデータ送信失敗（再送のトリガー）をカウント
-void MacTxDataFailedCallback(std::string context, Mac48Address addr) {
+void MacTxDataFailedCallback(std::string context,
+                             Mac48Address addr)
+{
+    // 【L2】MAC層でデータフレーム送信に失敗
+    // → ACKが返らなかったため再送が発生
     g_macTxFailed++;
 }
 
-// MAC層での送信試行（総送信回数）をカウント
-void MacTxDataCallback(std::string context, Ptr<const Packet> p) {
+void MacTxDataCallback(std::string context,
+                        Ptr<const Packet> p)
+{
+    // 【L2】MAC層での送信試行
+    // 初回送信 + 再送の両方がカウントされる
     g_macTxAttempts++;
 }
 
-void MonitorSnifferRxCallback(std::string context, Ptr<const Packet> packet, uint16_t channelFreqMhz, 
-                              WifiTxVector txVector, MpduInfo mpduInfo, SignalNoiseDbm signalNoise, uint16_t staId) {
+
+void MonitorSnifferRxCallback(std::string context,
+                              Ptr<const Packet> packet,
+                              uint16_t channelFreqMhz,
+                              WifiTxVector txVector,
+                              MpduInfo mpduInfo,
+                              SignalNoiseDbm signalNoise,
+                              uint16_t staId)
+{
+    // 【L1】PHYレベルでの受信信号情報
+    // IP/UDP/TCPの概念は一切存在しない
     g_totalRssi += signalNoise.signal;
-    g_totalSnr += (signalNoise.signal - signalNoise.noise);
+    g_totalSnr  += (signalNoise.signal - signalNoise.noise);
     g_rxSignalCount++;
 }
+
 
 double CalculateChannelUtilization(double simulationTimeSec) {
     if (simulationTimeSec <= 0) return 0.0;
@@ -235,7 +277,7 @@ int main(int argc, char *argv[]) {
 
     ApplicationContainer serverApps, clientApps;
     uint16_t port = 9000;
-
+    //【L7】アプリケーション層での送信レート指定
     for (uint32_t i = 0; i < config.nStations; ++i) {
         uint32_t dataRateMbps = (i < config.nHeavyUsers) ? config.heavyUserRate : config.lightUserRate;//重ユーザと軽ユーザでレートを分ける
         Address serverAddress(InetSocketAddress(apInterface.GetAddress(0), port + i));//サーバーアドレスの設定
@@ -309,45 +351,134 @@ int main(int argc, char *argv[]) {
     Simulator::Stop(Seconds(config.simulationTime + 0.1));
     Simulator::Run();
 
-    // --- 結果集計 ---
+    //=============================================================
+    //=============================================================
+    //         結果集計 
+    //=============================================================
+    //=============================================================
+    // double channelUtil = CalculateChannelUtilization(config.simulationTime);
+    // double collisionRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / (g_macTxAttempts + (double)g_macTxFailed ) * 100.0 : 0.0;
+
+    // // 再送率の計算
+    // double retransRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / g_macTxAttempts * 100.0 : 0.0;
+
+    // monitor->CheckForLostPackets();
+    
+    // // フロー識別子の取得とポートフィルタリング準備
+    // Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
+    // std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats();
+    
+    // double totalThroughput = 0.0;
+    // long totalRxPackets = 0;
+    // long totalTxPackets = 0;
+    // double totalDelaySec = 0.0;
+
+
+    // for (auto const &flow : stats) {
+    //     // ポート番号によるフィルタリング (戻りACK除外)
+    //     Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow(flow.first);
+        
+    //     // デバッグ用: 9000番台以外のポートが混ざっていないか確認
+    //     if (t.destinationPort < 9000) {
+    //         std::cout << "Warning: Counting non-server port packet! Port: " << t.destinationPort << std::endl;
+    //     }
+    //     // 宛先ポートがサーバーポート(9000番台)の範囲内かチェック
+    //     if (t.destinationPort >= 9000 && t.destinationPort < 9000 + config.nStations) {
+            
+    //         // ----フローごとの受信期間を計算 ---
+    //         double flowDuration = flow.second.timeLastRxPacket.GetSeconds() - flow.second.timeFirstRxPacket.GetSeconds();
+
+    //         // 安全策: パケットが1つしか届かなかった場合や同時刻の場合のゼロ除算を防ぐ
+    //         if (flowDuration <= 0.0) {
+    //             // 期間が計測できない場合は無視するか、1パケット分の時間などを仮定する
+    //             // ここでは極端な値にならないよう、便宜上 1.0秒 または 無視する処理にします
+    //             continue; 
+    //         }
+    //         // データフローのみ集計
+    //         totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / flowDuration;
+            
+    //         totalRxPackets += flow.second.rxPackets;
+    //         totalTxPackets += flow.second.txPackets;
+    //         totalDelaySec += flow.second.delaySum.GetSeconds();
+    //     }
+    // }
+
+    //=============================================================
+    //以下デバッグ用の追加情報
+    //=============================================================
     double channelUtil = CalculateChannelUtilization(config.simulationTime);
     double collisionRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / (g_macTxAttempts + (double)g_macTxFailed ) * 100.0 : 0.0;
-
-    // 再送率の計算
     double retransRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / g_macTxAttempts * 100.0 : 0.0;
 
     monitor->CheckForLostPackets();
-    
-    // フロー識別子の取得とポートフィルタリング準備
+
     Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
     std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats();
-    
+
     double totalThroughput = 0.0;
     long totalRxPackets = 0;
     long totalTxPackets = 0;
     double totalDelaySec = 0.0;
 
-    // 実際に通信が行われるはずの期間を分母にする
-    // 通信のアプリ開始 1.0s, 終了 config.simulationTime
-    double validDuration = config.simulationTime - 1.0;
-    if (validDuration <= 0) validDuration = 1.0; 
+    // === 情報追加 ===
+    std::cout << "\n=== Flow Debug Information ===" << std::endl;
+    double expectedTotalRate = 0.0;
+    for (uint32_t i = 0; i < config.nStations; ++i) {
+        uint32_t rate = (i < config.nHeavyUsers) ? config.heavyUserRate : config.lightUserRate;
+        expectedTotalRate += rate;
+    }
+    std::cout << "Expected Total Rate: " << expectedTotalRate << " Mbps" << std::endl;
+    std::cout << "Simulation Time: " << config.simulationTime << " sec" << std::endl;
+    std::cout << "Client Start Time: 1.0 sec" << std::endl;
+    std::cout << "Actual Tx Duration: " << (config.simulationTime - 1.0) << " sec" << std::endl;
 
+    int flowIndex = 0;
     for (auto const &flow : stats) {
-        // ポート番号によるフィルタリング (戻りACK除外)
         Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow(flow.first);
         
-        // 宛先ポートがサーバーポート(9000番台)の範囲内かチェック
         if (t.destinationPort >= 9000 && t.destinationPort < 9000 + config.nStations) {
+            flowIndex++;
             
-            // データフローのみ集計
-            totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / validDuration;
+            double firstRx = flow.second.timeFirstRxPacket.GetSeconds();
+            double lastRx = flow.second.timeLastRxPacket.GetSeconds();
+            double flowDuration = lastRx - firstRx;
             
+            double flowThroughput = flow.second.rxBytes * 8.0 / 1e6 / flowDuration;
+            
+            std::cout << "\nFlow " << flowIndex << " (Port " << t.destinationPort << "):" << std::endl;
+            std::cout << "  First Rx: " << firstRx << " sec" << std::endl;
+            std::cout << "  Last Rx:  " << lastRx << " sec" << std::endl;
+            std::cout << "  Duration: " << flowDuration << " sec" << std::endl;
+            std::cout << "  Rx Bytes: " << flow.second.rxBytes << std::endl;
+            std::cout << "  Rx Pkts:  " << flow.second.rxPackets << std::endl;
+            std::cout << "  Tx Pkts:  " << flow.second.txPackets << std::endl;
+            std::cout << "  Throughput (flow-based): " << flowThroughput << " Mbps" << std::endl;
+            
+            // 全体の送信時間で計算した場合
+            double throughputBySimTime = flow.second.rxBytes * 8.0 / 1e6 / config.simulationTime;
+            double throughputByActualTx = flow.second.rxBytes * 8.0 / 1e6 / (config.simulationTime - 1.0);
+            std::cout << "  Throughput (sim-time):   " << throughputBySimTime << " Mbps" << std::endl;
+            std::cout << "  Throughput (actual-tx):  " << throughputByActualTx << " Mbps" << std::endl;
+            
+            if (flowDuration <= 0.0) {
+                std::cout << "  WARNING: Invalid flow duration!" << std::endl;
+                continue;
+            }
+            
+            totalThroughput += flowThroughput;
             totalRxPackets += flow.second.rxPackets;
             totalTxPackets += flow.second.txPackets;
             totalDelaySec += flow.second.delaySum.GetSeconds();
         }
     }
 
+std::cout << "\n=== Throughput Comparison ===" << std::endl;
+std::cout << "Expected:  " << expectedTotalRate << " Mbps" << std::endl;
+std::cout << "Measured:  " << totalThroughput << " Mbps" << std::endl;
+std::cout << "Difference: " << (totalThroughput - expectedTotalRate) << " Mbps (" 
+          << ((totalThroughput - expectedTotalRate) / expectedTotalRate * 100.0) << " %)" << std::endl;
+
+// 以降は元のコンソール出力とCSV出力を続ける
     double avgDelayMs = (totalRxPackets > 0) ? (totalDelaySec / totalRxPackets) * 1000.0 : 0.0;
     double packetLossRate = (totalTxPackets > 0) ? (1.0 - (double)totalRxPackets / totalTxPackets) * 100.0 : 0.0;
     double aggregationRatio = (g_phyTxFrames > 0) ? (double)totalRxPackets / g_phyTxFrames : 0.0;

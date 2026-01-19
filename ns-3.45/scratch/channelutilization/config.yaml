@@ -8,7 +8,7 @@ radius: 5.0  # 大きくする(隠れ端末)
 # --- トラフィック負荷 ---
 heavyUserRate: 5  # Mbps
 lightUserRate: 0
-packetSize: 1460 #TCPのMSSは1460
+packetSize: 1400 #TCPのMSSは1460
 
 # --- 無線設定 ---
 txPower: 15  # APの送信電力 (dBm) 
