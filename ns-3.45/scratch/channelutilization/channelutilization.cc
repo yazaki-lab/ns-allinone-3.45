@@ -130,7 +130,7 @@ void GenerateDefaultConfig(const std::string& filename) {
     out << "outputFile: \"experiment_result.csv\"" << std::endl;
     out << "heavyUserRate: 10" << std::endl;
     out << "lightUserRate: 2" << std::endl;
-    out << "packetSize: 1500" << std::endl;
+    out << "packetSize: 1460" << std::endl; // ※修正: MSSサイズに統一
     out << "txPower: 16.0206" << std::endl; // ※追加
     out << "simulationTime: 10.0" << std::endl;
     out << "useTcp: false" << std::endl;
@@ -317,18 +317,35 @@ int main(int argc, char *argv[]) {
     double retransRate = (g_macTxAttempts > 0) ? (double)g_macTxFailed / g_macTxAttempts * 100.0 : 0.0;
 
     monitor->CheckForLostPackets();
+    
+    // フロー識別子の取得とポートフィルタリング準備
+    Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
     std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats();
+    
     double totalThroughput = 0.0;
     long totalRxPackets = 0;
     long totalTxPackets = 0;
     double totalDelaySec = 0.0;
 
+    // 実際に通信が行われるはずの期間を分母にする
+    // 通信のアプリ開始 1.0s, 終了 config.simulationTime
+    double validDuration = config.simulationTime - 1.0;
+    if (validDuration <= 0) validDuration = 1.0; 
+
     for (auto const &flow : stats) {
-        totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / (flow.second.timeLastRxPacket.GetSeconds() - flow.second.timeFirstTxPacket.GetSeconds());
-        //totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / config.simulationTime;//変える
-        totalRxPackets += flow.second.rxPackets;
-        totalTxPackets += flow.second.txPackets;
-        totalDelaySec += flow.second.delaySum.GetSeconds();
+        // ポート番号によるフィルタリング (戻りACK除外)
+        Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow(flow.first);
+        
+        // 宛先ポートがサーバーポート(9000番台)の範囲内かチェック
+        if (t.destinationPort >= 9000 && t.destinationPort < 9000 + config.nStations) {
+            
+            // データフローのみ集計
+            totalThroughput += flow.second.rxBytes * 8.0 / 1e6 / validDuration;
+            
+            totalRxPackets += flow.second.rxPackets;
+            totalTxPackets += flow.second.txPackets;
+            totalDelaySec += flow.second.delaySum.GetSeconds();
+        }
     }
 
     double avgDelayMs = (totalRxPackets > 0) ? (totalDelaySec / totalRxPackets) * 1000.0 : 0.0;
