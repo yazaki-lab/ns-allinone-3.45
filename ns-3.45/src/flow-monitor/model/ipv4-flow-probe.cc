@@ -313,7 +313,7 @@ Ipv4FlowProbe::DoDispose()
 void
 Ipv4FlowProbe::SendOutgoingLogger(const Ipv4Header& ipHeader,
                                   Ptr<const Packet> ipPayload,
-                                  uint32_t interface)
+                                  uint32_t interface)//Flowmonitorではヘッダをつけて観測している
 {
     FlowId flowId;
     FlowPacketId packetId;

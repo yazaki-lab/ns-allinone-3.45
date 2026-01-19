@@ -294,7 +294,7 @@ OnOffApplication::ScheduleNextTx()
     {
         NS_ABORT_MSG_IF(m_residualBits > m_pktSize * 8,
                         "Calculation to compute next send time will overflow");
-        uint32_t bits = m_pktSize * 8 - m_residualBits;
+        uint32_t bits = m_pktSize * 8 - m_residualBits;//ヘッダに関する足し算がないので、ペイロードのみを計算している
         NS_LOG_LOGIC("bits = " << bits);
         Time nextTime(
             Seconds(bits / static_cast<double>(m_cbrRate.GetBitRate()))); // Time till next packet
