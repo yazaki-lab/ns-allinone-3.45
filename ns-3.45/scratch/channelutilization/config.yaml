@@ -3,12 +3,12 @@
 # --- 基本設定 ---
 nStations: 1
 heavyUserPercentage: 100
-radius: 30.0  # 大きくする(隠れ端末)
+radius: 5.0  # 大きくする(隠れ端末)
 
 # --- トラフィック負荷 ---
 heavyUserRate: 5  # Mbps
 lightUserRate: 0
-packetSize: 1400 #TCPのMSSは1460
+packetSize: 1500 #TCPのMSSは1460
 
 # --- 無線設定 ---
 txPower: 15  # APの送信電力 (dBm)
@@ -20,7 +20,7 @@ maxAmpduSize: 65535
 rtsCtsThreshold: 65535
 
 # --- 出力設定 ---
-outputFile: "cu_0119_1st.csv"
+outputFile: "cu_0120_1st.csv"
 simulationTime: 30.0
 enableTxtOutput: true
 enableNetAnim: false

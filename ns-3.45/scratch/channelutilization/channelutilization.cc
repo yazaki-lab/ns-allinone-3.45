@@ -148,7 +148,7 @@ SimulationConfig LoadConfigFromYAML(const std::string& configFile) {
         config.heavyUserRate = yamlConfig["heavyUserRate"].as<uint32_t>();
         config.lightUserRate = yamlConfig["lightUserRate"].as<uint32_t>();
         config.packetSize = yamlConfig["packetSize"].as<uint32_t>();
-        config.txPower = yamlConfig["txPower"].as<double>(16.0206); // デフォルト値 ※追加
+        config.txPower = yamlConfig["txPower"].as<double>(16.0206);
         config.useTcp = yamlConfig["useTcp"].as<bool>(false);
         config.useMinstrel = yamlConfig["useMinstrel"].as<bool>(false);
         config.maxAmpduSize = yamlConfig["maxAmpduSize"].as<uint32_t>(65535);
@@ -322,7 +322,7 @@ int main(int argc, char *argv[]) {
                     MakeCallback(&PhyStateChangeCallback));//AP(Node 0)のPHY状態変化を監視
     Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/PhyTxBegin",
                     MakeCallback(&PhyTxBeginCallback));//AP(Node 0)のPHY送信開始を監視
-    Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/MonitorSnifferRx", 
+    Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Phy/MonitorSnifferRx",
                     MakeCallback(&MonitorSnifferRxCallback));//AP(Node 0)の受信パケットを監視
 
     for(uint32_t i=0; i<config.nStations; i++){
@@ -339,9 +339,9 @@ int main(int argc, char *argv[]) {
     }
 
     // AP(Node 0)側の送信試行・失敗もカウント対象に含める場合（下り通信メインなら重要）
-    Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/RemoteStationManager/MacTxDataFailed", 
+    Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/RemoteStationManager/MacTxDataFailed",
                     MakeCallback(&MacTxDataFailedCallback));
-    Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Mac/MacTx", 
+    Config::Connect("/NodeList/0/DeviceList/*/$ns3::WifiNetDevice/Mac/MacTx",
                     MakeCallback(&MacTxDataCallback));
 
     FlowMonitorHelper flowmon;
