@@ -3,7 +3,11 @@
 # --- 基本設定 ---
 nStations: 10
 heavyUserPercentage: 100
+<<<<<<< HEAD
 radius: 15.0  # 大きくする(隠れ端末)
+=======
+radius: 30.0  # 大きくする(隠れ端末)
+>>>>>>> a8ff1ea041e8387ee8e1d24a5840fc8401cb45f2
 
 # --- トラフィック負荷 ---
 heavyUserRate: 10  # Mbps
