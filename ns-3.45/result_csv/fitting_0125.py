@@ -48,7 +48,7 @@ def exp_saturation_model(X, a, b, c, d, max_val):
     z = a * load + b * rssi + c * stations + d
 
     # 安全対策（expの発散防止）
-    z = np.clip(z, -50, 50)
+    z = np.clip(z, -30, 30)
 
     return max_val * (1 - np.exp(-z))
 
@@ -130,6 +130,31 @@ try:
     print(f"  MaxVal       : {popt[4]:.2f} %")
 
     # =====================================================
+    # Excel 用の数式出力
+    # =====================================================
+    print("\n=== Excel貼り付け用 数式 ===")
+    print("【前提】")
+    print("  C2 = Load (Mbps)")
+    print("  S2 = Avg RSSI (dBm)")
+    print("  A2 = Stations")
+    print("  出力セルにそのまま貼り付け可能")
+    print("-" * 60)
+
+    excel_formula = (
+        f"={popt[4]:.6f}*(1-EXP(-("
+        f"{popt[0]:.6f}*C2"
+        f"{popt[1]:+.6f}*S2"
+        f"{popt[2]:+.6f}*A2"
+        f"{popt[3]:+.6f}"
+        f")))"
+    )
+
+    print("Excel数式:")
+    print(excel_formula)
+    print("-" * 60)
+
+
+    # =====================================================
     # 実測値 vs 予測値の可視化
     # =====================================================
     plt.figure(figsize=(6, 6))
@@ -150,37 +175,153 @@ try:
 except Exception as e:
     # フィッティングに失敗した場合のエラー表示
     print(f"フィッティングエラーが発生しました: {e}")
+    popt = None
 
 # =========================================================
-# 5. 測定値のみの3次元散布図
+# 5. 測定値 + 予測曲面の3次元散布図
 # =========================================================
-fig = plt.figure(figsize=(8, 6))
-ax = fig.add_subplot(111, projection='3d')
+if popt is not None:
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(111, projection='3d')
 
-# 測定データ
-x = df['Load(Mbps)'].values
-y = df['AvgRSSI(dBm)'].values
-z = df['Utilization(%)'].values
-c = df['Stations'].values  # 色に使用
+    # 測定データ
+    x_measured = df['Load(Mbps)'].values
+    y_measured = df['AvgRSSI(dBm)'].values
+    z_measured = df['Utilization(%)'].values
+    c_measured = df['Stations'].values  # 色に使用
 
-# 3D scatter
-sc = ax.scatter(
-    x, y, z,
-    c=c,
-    cmap='viridis',
-    s=40,
-    alpha=0.8
-)
+    # 測定データの3D scatter
+    sc = ax.scatter(
+        x_measured, y_measured, z_measured,
+        c=c_measured,
+        cmap='viridis',
+        s=40,
+        alpha=0.8,
+        label='Measured Data'
+    )
 
-# 軸ラベル
-ax.set_xlabel('Load (Mbps)')
-ax.set_ylabel('Avg RSSI (dBm)')
-ax.set_zlabel('Utilization (%)')
+    # =====================================================
+    # 予測曲面の生成（複数のStations代表値）
+    # =====================================================
+    # Load と RSSI のメッシュグリッドを作成
+    load_range = np.linspace(x_measured.min(), x_measured.max(), 30)
+    rssi_range = np.linspace(y_measured.min(), y_measured.max(), 30)
+    load_grid, rssi_grid = np.meshgrid(load_range, rssi_range)
 
-# カラーバー（Stations）
-cb = plt.colorbar(sc, ax=ax, pad=0.1)
-cb.set_label('Stations')
+    # Stationsの代表値を複数設定（最小値、25%点、中央値、75%点、最大値）
+    stations_min = c_measured.min()
+    stations_25 = np.percentile(c_measured, 25)
+    stations_median = np.median(c_measured)
+    stations_75 = np.percentile(c_measured, 75)
+    stations_max = c_measured.max()
+    
+    representative_stations = [stations_min, stations_25, stations_median, stations_75, stations_max]
+    colors = ['blue', 'cyan', 'red', 'orange', 'darkred']
+    
+    # 各代表値について予測曲面を描画
+    for stations_val, color in zip(representative_stations, colors):
+        # 予測曲面のUtilizationを計算
+        utilization_grid = exp_saturation_model(
+            (load_grid, rssi_grid, np.full_like(load_grid, stations_val)),
+            *popt
+        )
 
-ax.set_title('Measured Data Only (3D Scatter)')
+        # 予測曲面をプロット
+        ax.plot_surface(
+            load_grid, rssi_grid, utilization_grid,
+            color=color,
+            alpha=0.25,
+            label=f'Stations={stations_val:.0f}'
+        )
 
-plt.show()
+    # 軸ラベル
+    ax.set_xlabel('Load (Mbps)')
+    ax.set_ylabel('Avg RSSI (dBm)')
+    ax.set_zlabel('Utilization (%)')
+
+    # カラーバー（Stations）
+    cb = plt.colorbar(sc, ax=ax, pad=0.1)
+    cb.set_label('Stations')
+
+    ax.set_title(f'Measured Data + Predicted Surfaces (Multiple Station Values)')
+
+    # 凡例を手動で追加
+    from matplotlib.patches import Patch
+    legend_elements = [
+        Patch(facecolor='blue', alpha=0.25, label=f'Stations={stations_min:.0f}'),
+        Patch(facecolor='cyan', alpha=0.25, label=f'Stations={stations_25:.0f}'),
+        Patch(facecolor='red', alpha=0.25, label=f'Stations={stations_median:.0f}'),
+        Patch(facecolor='orange', alpha=0.25, label=f'Stations={stations_75:.0f}'),
+        Patch(facecolor='darkred', alpha=0.25, label=f'Stations={stations_max:.0f}')
+    ]
+    ax.legend(handles=legend_elements, loc='upper left')
+
+    plt.show()
+
+
+# =========================================================
+# 6. Stationsの代表点ごとの Utilization vs RSSI グラフ（2次元）
+# =========================================================
+if popt is not None:
+    # Stationsの代表値（既に定義済み）
+    representative_stations = [stations_min, stations_25, stations_median, stations_75, stations_max]
+    colors = ['blue', 'cyan', 'green', 'orange', 'red']
+    
+    # =========================================================
+    # 各Stations代表値を1つのグラフにまとめた版
+    # =========================================================
+    fig, ax = plt.subplots(figsize=(12, 8))
+    
+    for idx, (stations_val, color) in enumerate(zip(representative_stations, colors)):
+        # 該当するStations値に近いデータを抽出
+        tolerance = 2  # Stations値の許容範囲
+        mask = np.abs(c_measured - stations_val) <= tolerance
+        
+        if np.sum(mask) > 0:
+            # 測定データ
+            rssi_measured_subset = y_measured[mask]
+            util_measured_subset = z_measured[mask]
+            
+            # 測定データをプロット（実測値）
+            ax.scatter(
+                rssi_measured_subset,
+                util_measured_subset,
+                c=color,
+                s=60,
+                alpha=0.6,
+                edgecolors='black',
+                linewidth=0.5,
+                label=f'Measured (Stations={stations_val:.0f})'
+            )
+            
+            # 予測曲線の生成（中央値のLoadを使用）
+            rssi_range = np.linspace(y_measured.min(), y_measured.max(), 100)
+            load_median = np.median(x_measured)
+            
+            util_pred = exp_saturation_model(
+                (np.full_like(rssi_range, load_median),
+                 rssi_range,
+                 np.full_like(rssi_range, stations_val)),
+                *popt
+            )
+            
+            # 予測曲線をプロット
+            ax.plot(
+                rssi_range,
+                util_pred,
+                color=color,
+                linewidth=2.5,
+                linestyle='--',
+                alpha=0.9,
+                label=f'Predicted (Stations={stations_val:.0f})'
+            )
+    
+    ax.set_xlabel('RSSI (dBm)', fontsize=12)
+    ax.set_ylabel('Utilization (%)', fontsize=12)
+    ax.set_title(f'Utilization vs RSSI for Different Station Values (Load={load_median:.1f} Mbps)', 
+                 fontsize=14, fontweight='bold')
+    ax.grid(True, alpha=0.3)
+    ax.legend(fontsize=10, loc='best', ncol=2)
+    
+    plt.tight_layout()
+    plt.show()
