@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 # ここでは「チャネル使用率(Utilization)」を説明するための
 # 入力データ（Load, RSSI, Stations）が含まれている想定
 # =========================================================
-file_path = '/Users/kamikawamasahiro/Desktop/ns-allinone-3.45/ns-3.45/result_csv/cu_0119_1st.csv'
+file_path = 'cu_0119_1st.csv'
 
 try:
     # CSVファイルをDataFrameとして読み込む

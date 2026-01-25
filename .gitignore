@@ -17,3 +17,4 @@ ns-3.45/.lock-waf*
 netanim-3.108/
 ninja.log
 ns-3.45/cmake-cache/*
+ns-3.45/result_csv/venv/*
