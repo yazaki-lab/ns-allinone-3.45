@@ -1,9 +1,9 @@
 # ns-3 実験用設定ファイル (改良版)
 
 # --- 基本設定 ---
-nStations: 15
+nStations: 10
 heavyUserPercentage: 100
-radius: 25.0  # 大きくする(隠れ端末)
+radius: 15.0  # 大きくする(隠れ端末)
 
 # --- トラフィック負荷 ---
 heavyUserRate: 10  # Mbps
