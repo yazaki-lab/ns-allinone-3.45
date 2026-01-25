@@ -34,54 +34,23 @@ except FileNotFoundError:
 
 
 # =========================================================
-# 2. モデル関数の定義（シグモイド関数）
+# 2'. モデル関数の定義（指数飽和モデル）
 # =========================================================
-# curve_fit に渡す「予測モデル」を定義する
-#
-# この関数は以下の考え方に基づく：
-# ・Load（トラフィック量）
-# ・RSSI（電波強度）
-# ・Stations（接続端末数）
-#
-# これらの線形結合を z とし，
-# それをシグモイド関数に通して
-# 「チャネル使用率（0〜MaxValで飽和）」を表現する
-#
-# Utilization = MaxVal / (1 + exp(-z))
-# =========================================================
-def sigmoid_model(X, a, b, c, d, max_val):
+def exp_saturation_model(X, a, b, c, d):
     """
-    シグモイド型の回帰モデル
+    指数飽和型回帰モデル
 
-    Parameters
-    ----------
-    X : tuple
-        (Load, RSSI, Stations) の3つの配列をまとめたもの
-    a : float
-        Load に対する係数
-    b : float
-        RSSI に対する係数
-    c : float
-        Stations に対する係数
-    d : float
-        定数項（バイアス）
-    max_val : float
-        使用率の最大値（理論的な上限）
-
-    Returns
-    -------
-    utilization : ndarray
-        予測されたチャネル使用率（%）
+    Utilization = 100 * (1 - exp(-(a*Load + b*RSSI + c*Stations + d)))
     """
 
-    # X に含まれる各説明変数を取り出す
     load, rssi, stations = X
 
-    # 線形結合（回帰式の中身）
     z = a * load + b * rssi + c * stations + d
 
-    # シグモイド関数に通して出力
-    return max_val / (1 + np.exp(-z))
+    # 安全対策（expの発散防止）
+    z = np.clip(z, -50, 50)
+
+    return 100 * (1 - np.exp(-z))
 
 
 # =========================================================
@@ -112,20 +81,26 @@ y_data = df['Utilization(%)'].values
 # ・RSSI は良いほど効率が良い → 負を想定
 # ・Stations は増えるとオーバーヘッド増加 → 正
 # =========================================================
-initial_guess = [0.1, -0.1, 0.01, 0, 90]
+initial_guess = [
+    0.02,   # a: Load（急峻なのでシグモイドより小さめ）
+   -0.02,   # b: RSSI（良いRSSIほど効率↑ → 負）
+    0.01,   # c: Stations（競合増）
+    0.0,    # d: バイアス
+]
+
 
 try:
     # curve_fit により最適な係数を推定
     popt, pcov = curve_fit(
-        sigmoid_model,
+        exp_saturation_model,
         X_data,
         y_data,
         p0=initial_guess,
-        maxfev=10000
+        maxfev=20000
     )
 
     # 推定されたモデルで予測値を計算
-    y_pred = sigmoid_model(X_data, *popt)
+    y_pred = exp_saturation_model(X_data, *popt)
 
     # 決定係数 R² を計算（1に近いほど良い）
     r2 = r2_score(y_data, y_pred)
@@ -133,28 +108,24 @@ try:
     # =====================================================
     # 結果の表示
     # =====================================================
-    print("\n=== 非線形回帰モデル（シグモイド）の結果 ===")
+    print("\n=== 指数飽和モデルの結果 ===")
     print(f"決定係数 (R2): {r2:.4f}")
     print("-" * 60)
 
-    # 論文・レポート用にそのまま書ける数式形式
     print(
-        f"導出された式:\n"
-        f"Utilization = {popt[4]:.2f} / "
-        f"(1 + exp(-({popt[0]:.4f}*Load "
+        f"Utilization = 100 * "
+        f"(1 - exp(-({popt[0]:.4f}*Load "
         f"+ {popt[1]:.4f}*RSSI "
         f"+ {popt[2]:.4f}*Stations "
         f"+ {popt[3]:.4f})))"
     )
-    print("-" * 60)
 
-    # 各係数の意味を説明
+    print("-" * 60)
     print("【係数の解釈】")
-    print(f"  a (Loadの影響)     : {popt[0]:.4f}")
-    print(f"  b (RSSIの影響)     : {popt[1]:.4f}")
-    print(f"  c (Stationsの影響) : {popt[2]:.4f}")
-    print(f"  d (定数項)         : {popt[3]:.4f}")
-    print(f"  MaxVal (飽和値)    : {popt[4]:.2f} %")
+    print(f"  a (Load)     : {popt[0]:.4f}")
+    print(f"  b (RSSI)     : {popt[1]:.4f}")
+    print(f"  c (Stations) : {popt[2]:.4f}")
+    print(f"  d (bias)     : {popt[3]:.4f}")
 
     # =====================================================
     # 実測値 vs 予測値の可視化
