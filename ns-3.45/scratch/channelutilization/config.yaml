@@ -3,7 +3,7 @@
 # --- 基本設定 ---
 nStations: 15
 heavyUserPercentage: 100
-radius: 25.0  # 大きくする(隠れ端末)
+radius: 30.0  # 大きくする(隠れ端末)
 
 # --- トラフィック負荷 ---
 heavyUserRate: 10  # Mbps
