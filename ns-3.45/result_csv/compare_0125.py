@@ -11,7 +11,7 @@ plt.rcParams['axes.unicode_minus'] = False
 df = pd.read_csv('cu_0119_1st.csv')
 
 # データの抽出
-load_data = df['Load(Mbps)'].values
+load_data = df['Throughput(Mbps)'].values
 rssi_data = df['AvgRSSI(dBm)'].values
 stations_data = df['Stations'].values
 util_measured = df['Utilization(%)'].values

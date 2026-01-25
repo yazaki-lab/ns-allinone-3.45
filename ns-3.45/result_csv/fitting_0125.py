@@ -65,7 +65,7 @@ def exp_saturation_model(X, a, b, c, d, max_val):
 #   Utilization(%)  : チャネル使用率
 # =========================================================
 X_data = (
-    df['Load(Mbps)'].values,
+    df['Throughput(Mbps)'].values,
     df['AvgRSSI(dBm)'].values,
     df['Stations'].values
 )
