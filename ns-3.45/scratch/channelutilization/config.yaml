@@ -1,7 +1,7 @@
 # ns-3 実験用設定ファイル (改良版)
 
 # --- 基本設定 ---
-nStations: 5
+nStations: 3
 heavyUserPercentage: 100
 radius: 25.0  # 大きくする(隠れ端末)
 
