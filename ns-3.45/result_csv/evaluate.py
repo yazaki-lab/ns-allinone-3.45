@@ -174,10 +174,10 @@ def evaluate(
         ("Linear", Pipeline([("scaler", StandardScaler()), ("model", LinearRegression())])),
         ("Tree", DecisionTreeRegressor(random_state=seed)),
         ("RF", RandomForestRegressor(
-            random_state=seed,
-            n_estimators=n_estimators,
-            min_samples_leaf=min_samples_leaf,
-            n_jobs=-1
+            random_state=seed, #種を固定して再現性確保
+            n_estimators=n_estimators, #木の数（多いほど精度向上・過学習の可能性も増える・計算コスト増）
+            min_samples_leaf=min_samples_leaf, #葉の数が少ないと過学習の可能性がある
+            n_jobs = -1 #CPUコア全使用
         )),
     ]
 
@@ -200,7 +200,7 @@ def evaluate(
 
     if use_group:
         gkf = GroupKFold(n_splits=n_splits)
-        splits = list(gkf.split(df, y, groups=groups))  # ★ここが重要（使い切り防止）
+        splits = list(gkf.split(df, y, groups=groups))  # ★ここが重要
         split_name = "GroupKFold(leave-one-distance-out)"
     else:
         splitter = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=seed)
